@@ -1,0 +1,53 @@
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+<style>
+table.dataTable tbody tr {
+  background-color: red;
+}
+</style>
+
+
+<div class="container-fluid" style="margin-top:100px">
+
+<table id="myTable" class="table compact table-dark">
+    <thead>
+        <tr >
+            <th>№</th>
+            <th>Уровень</th>
+            <th>Время</th>
+            <th>Источник</th>
+            <th style="width: 50%">Событие</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>Важный</td>
+            <td>10/11/2019 15:32:18</td>
+            <td>Канал 1</td>
+            <td>Превышение максимального порога 80А</td>
+        </tr>
+        <tr>
+            <th scope="row">2</th>
+            <td>Важный</td>
+            <td>10/11/2019 15:32:18</td>
+            <td>Канал 3</td>
+            <td>Превышение максимального порога 10А</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+
+<script>
+	$(document).ready( function () {
+    $('#myTable').DataTable({
+    	"paging":   false,
+    	"info" : false,
+    	"searching":false
+    });
+} );
+</script>

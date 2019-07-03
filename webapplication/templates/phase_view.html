@@ -1,0 +1,84 @@
+<script src="/static/js/chartjs-plugin-annotation.min.js"></script>
+<script src="/static/js/chart_measure_config.js"></script>
+<script src="/static/js/chart_stat_bars_config.js"></script>
+<script src="/static/js/test_func.js"></script>
+
+<div class="container-fluid" style="margin-top:100px">
+
+<dev class="row justify-content-between ">
+
+	<dev class="col-sm-10 shadow">
+		<canvas id="phase1"  ></canvas>
+	</dev>
+	
+	<dev class="col-sm-2">
+
+		<dev class="row shadow-sm m-1">
+			<canvas id="statistic"  height = 400 ></canvas>
+		</dev>
+
+		<dev class="row w-100 m-1 justify-content-left shadow-sm ">
+			<p>Фаза 1: <output id="text_phase1"></output></p>
+		</dev>
+		<dev class="row w-100 m-1 justify-content-center shadow-sm ">
+			<p>Фаза 2: <output id="text_phase2"></output></p>
+		</dev>
+		<dev class="row w-100 m-1 justify-content-center shadow-sm">
+			<p>Фаза 3: <output id="text_phase3"></output></p>
+		</dev>
+
+	</dev>
+</dev>
+
+
+<script>
+var result1=document.getElementById("text_phase1")
+var result2=document.getElementById("text_phase2")
+var result3=document.getElementById("text_phase3")
+result1.innerHTML="125.1А"
+result2.innerHTML="1.1А"
+result3.innerHTML="45.1А"
+</script>
+
+
+<script>
+
+var bar_chart_conf = get_stat_bars_config(
+	["Фаза 1", "Фаза 2", "Фаза 3"], 
+	[63,55,78], [56,20,10], 
+	[70,70,70])
+
+new Chart(document.getElementById("statistic"),bar_chart_conf);
+
+</script>
+
+<script>	
+var fhase1_data_val=[];
+var fhase2_data_val=[];
+var fhase3_data_val=[];
+var fhase1_label =[];
+var val;
+for (var i = 1; i <= 5000; i++) {
+	val = getSinus(i,10)
+	fhase1_data_val.push(val)
+	val = getSinus(i+100,5)
+	fhase2_data_val.push(val)
+	val = getSinus(i+200,12)
+	fhase3_data_val.push(val)
+	fhase1_label.push(i)
+}
+
+
+var chart_conf =  get_measure_chart_config(
+	fhase1_label,
+	fhase1_data_val,
+	fhase2_data_val,
+	fhase3_data_val 
+	)
+
+
+
+
+var mychart = new Chart(document.getElementById("phase1"), chart_conf);
+
+</script>
