@@ -1,5 +1,5 @@
 
-function get_measure_chart_config(labels, data1, data2, data3)
+function get_measure_chart_config(labels, data, data_pic, graph_name)
 {
     var cfg = {
         type: 'line',
@@ -9,38 +9,36 @@ function get_measure_chart_config(labels, data1, data2, data3)
             labels: labels,
             datasets: 
             [{ 
-                data: data1,
+                data: data,
                 pointRadius : 0,
-                borderColor: "#e80c0c",
-                backgroundColor: "rgba(34,1,34,0.5)", //Цвет заполнения квадрата 
-                borderWidth : 1,
-                steppedLine :true,
-                strokeColor : "rgba(100, 51, 51, 1)",
-                scaleFontColor: "#FF36F00",
-                fill: false,
-                label : 'Фаза 1'
+                borderColor: "#90780c",
+                backgroundColor: "rgba(34,34,34,0.1)", //Цвет заполнения квадрата 
+                borderWidth : 2,
+                steppedLine :false,
+                strokeColor : "rgba(10, 51, 51, 0.2)",
+                scaleFontColor: "rgba(34, 51, 51, 0.3)",
+                fill: true
             },
             { 
-                data: data2,
+                data: data_pic,
                 pointRadius : 0,
+                borderColor: "#ffffff",
+                backgroundColor: "rgba(34,34,34,0.1)", //Цвет заполнения квадрата 
                 borderWidth : 1,
-                borderColor: "#0e0af5",
-                fill: false,
-                label : 'Фаза 2'
-            },
-            { 
-                data: data3,
-                pointRadius : 0,
-                borderWidth : 1,
-                borderColor: "#ff9e0d",
-                fill: true,
-                label : 'Фаза 3'
+                borderDash: [2,2],
+                steppedLine :false,
+                strokeColor : "rgba(10, 51, 51, 0.2)",
+                scaleFontColor: "rgba(34, 51, 51, 0.3)",
+                fill: false
             }]
         },
 
         options: 
         {
-            title: {display: false, text: 'Ток потребления по фазам'},
+            legend: {
+                display: false
+            },
+            title: {display: false, text: graph_name},
             elements: 
             {
                 //line: {
@@ -72,7 +70,11 @@ function get_measure_chart_config(labels, data1, data2, data3)
 
                 yAxes: 
                 [{
-                    ticks: {beginAtZero:true, max: 100}
+                    ticks: {beginAtZero:true, max: 100},
+                    scaleLabel: {
+                        display: true,
+                        labelString: graph_name
+                    },
                 }],
 
                 xAxes: 
@@ -93,7 +95,7 @@ function get_measure_chart_config(labels, data1, data2, data3)
                         borderWidth: 2,
                         label: 
                         {
-                            enabled: true,
+                            enabled: false,
                             fontSize: 10,
                             position : "left",
                             backgroundColor: "rgba(34,1,34,0.3)",

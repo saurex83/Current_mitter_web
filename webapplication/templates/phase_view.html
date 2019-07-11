@@ -1,33 +1,68 @@
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 <script src="/static/js/chartjs-plugin-annotation.min.js"></script>
 <script src="/static/js/chart_measure_config.js"></script>
 <script src="/static/js/chart_stat_bars_config.js"></script>
 <script src="/static/js/test_func.js"></script>
 
+<style>
+table.dataTable tbody tr {
+  background-color: olive;
+}
+</style>
+
 <div class="container-fluid" style="margin-top:100px">
 
-<dev class="row justify-content-between ">
+<dev class="row">
 
-	<dev class="col-sm-10 shadow">
-		<canvas id="phase1"  ></canvas>
+	<dev class="col-sm-9 shadow">
+		<dev class="row">
+			<canvas id="phase1" width="300" height="50"></canvas>
+		</dev>
+		<dev class="row">
+			<canvas id="phase2" width="300" height="50"></canvas>
+		</dev>
+		<dev class="row">
+			<canvas id="phase3" width="300" height="50"></canvas>
+		</dev>
 	</dev>
-	
-	<dev class="col-sm-2">
 
-		<dev class="row shadow-sm m-1">
-			<canvas id="statistic"  height = 400 ></canvas>
-		</dev>
+	<dev class = "col-sm-3">
+		<table id="myTable" class="table compact table-dark">
+    <thead>
+        <tr >
+            <th>Канал</th>
+            <th>Ток</th>
+            <th>Макс. ток</th>
+            <th>Пик. ток</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">Фаза 1</th>
+            <td>12.56 А</td>
+            <td>14.3 А</td>
+            <td>45.7 А</td>
+        </tr>
+        <tr>
+            <th scope="row">Фаза 2</th>
+            <td>12.56 А</td>
+            <td>14.3 А</td>
+            <td>45.7 А</td>
+        </tr>
+        <tr>
+            <th scope="row">Фаза 3</th>
+            <td>12.56 А</td>
+            <td>14.3 А</td>
+            <td>45.7 А</td>
+        </tr>
+    </tbody>
+</table>
+	</dev>	
 
-		<dev class="row w-100 m-1 justify-content-left shadow-sm ">
-			<p>Фаза 1: <output id="text_phase1"></output></p>
-		</dev>
-		<dev class="row w-100 m-1 justify-content-center shadow-sm ">
-			<p>Фаза 2: <output id="text_phase2"></output></p>
-		</dev>
-		<dev class="row w-100 m-1 justify-content-center shadow-sm">
-			<p>Фаза 3: <output id="text_phase3"></output></p>
-		</dev>
-
-	</dev>
 </dev>
 
 
@@ -56,9 +91,12 @@ new Chart(document.getElementById("statistic"),bar_chart_conf);
 var fhase1_data_val=[];
 var fhase2_data_val=[];
 var fhase3_data_val=[];
+var fhase1_data_pic=[]
+var fhase2_data_pic=[]
+var fhase3_data_pic=[]
 var fhase1_label =[];
 var val;
-for (var i = 1; i <= 5000; i++) {
+for (var i = 1; i <= 300; i++) {
 	val = getSinus(i,10)
 	fhase1_data_val.push(val)
 	val = getSinus(i+100,5)
@@ -66,19 +104,53 @@ for (var i = 1; i <= 5000; i++) {
 	val = getSinus(i+200,12)
 	fhase3_data_val.push(val)
 	fhase1_label.push(i)
+
+	val = getSinus_shift(i,10,4)
+	fhase1_data_pic.push(val)
+
+	val = getSinus_shift(i+100,5,1)
+	fhase2_data_pic.push(val)
+
+	val = getSinus_shift(i+200,12,7)
+	fhase3_data_pic.push(val)
+	
 }
 
 
-var chart_conf =  get_measure_chart_config(
+var chart_conf_1 =  get_measure_chart_config(
 	fhase1_label,
 	fhase1_data_val,
+	fhase1_data_pic,
+	"Фаза 1,А" 
+	)
+var chart_conf_2 =  get_measure_chart_config(
+	fhase1_label,
 	fhase2_data_val,
-	fhase3_data_val 
+	fhase2_data_pic,
+	"Фаза 2,А" 
+	)
+var chart_conf_3 =  get_measure_chart_config(
+	fhase1_label,
+	fhase3_data_val,
+	fhase3_data_pic,
+	"Фаза 3,А" 
 	)
 
 
 
+var mychart1 = new Chart(document.getElementById("phase1"), chart_conf_1);
+var mychart2 = new Chart(document.getElementById("phase2"), chart_conf_2);
+var mychart3 = new Chart(document.getElementById("phase3"), chart_conf_3);
+</script>
 
-var mychart = new Chart(document.getElementById("phase1"), chart_conf);
 
+
+<script>
+	$(document).ready( function () {
+    $('#myTable').DataTable({
+    	"paging":   false,
+    	"info" : false,
+    	"searching":false
+    });
+} );
 </script>

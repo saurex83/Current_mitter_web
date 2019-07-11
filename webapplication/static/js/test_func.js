@@ -5,5 +5,10 @@ function getRandomArbitrary(min, max)
 	
 function getSinus(x,a)
 {
-	return 50+(a+7*Math.random())*Math.sin(x/100)
+	return 50+(a+7*Math.random())*Math.sin(x/20)
+}
+
+function getSinus_shift(x,a,s)
+{
+	return 50+(a+7*Math.random())*Math.sin(x/20)+s
 }
