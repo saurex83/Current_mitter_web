@@ -93,11 +93,14 @@ sudo modprobe rtc-ds1307
 # python3
 sudo apt install python3-dev
 sudo apt install python3-pip
+apt-get install python3-venv
+
 
 # ngix
 sudo apt-get install nginx
 sudo systemctl enable nginx
 sudo systemctl start nginx
+sudo apt-get install libpq-dev
 
 # uwsgi
 sudo apt-get install uwsgi
