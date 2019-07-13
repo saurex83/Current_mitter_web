@@ -109,7 +109,14 @@ sudo apt install git
 sudo nano /etc/hostname
  cmeter
 
+# create ap
+Создание точки доступа
+git clone https://github.com/oblique/create_ap
+sudo apt install hostapd
+sudo apt install dnsmasq
 
+cd create_ap
+make install
 
 
   
