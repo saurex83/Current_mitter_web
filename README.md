@@ -15,6 +15,7 @@ userdel -r pi
 
 ## fstab
 Запрещаем запись логов и временных файлов на sd карту
+
 tmpfs           /tmp                tmpfs   defaults,noatime,nosuid,size=100m                   0   0
 tmpfs           /var/tmp            tmpfs   defaults,noatime,nosuid,size=30m                    0   0
 tmpfs           /var/log            tmpfs   defaults,noatime,nosuid,mode=0755,size=100m         0   0
@@ -88,6 +89,26 @@ sudo modprobe rtc-ds1307
 => CREATE DATABASE cmetter;
 Просмотр созданых баз
 => select * from pg_database;
+
+# python3
+sudo apt install python3-dev
+sudo apt install python3-pip
+
+# ngix
+sudo apt-get install nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx
+
+# uwsgi
+sudo apt-get install uwsgi
+
+# git
+sudo apt install git
+
+# hostname 
+sudo nano /etc/hostname
+ cmeter
+
 
 
 
