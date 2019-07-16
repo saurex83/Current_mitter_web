@@ -14,12 +14,15 @@ usermod saurex83 -a -G sudo
 userdel -r pi
 
 ## fstab
-Запрещаем запись логов и временных файлов на sd карту
+Запрещаем запись логов и временных файлов на sd карту.
+Для нормальной работы ngix нужна отдельная папка /var/log/ngix
+В ином случии папкп ngix вместе с правами исечает после перезагрузки
 
 tmpfs           /tmp                tmpfs   defaults,noatime,nosuid,size=100m                   0   0
 tmpfs           /var/tmp            tmpfs   defaults,noatime,nosuid,size=30m                    0   0
 tmpfs           /var/log            tmpfs   defaults,noatime,nosuid,mode=0755,size=100m         0   0
 tmpfs           /var/spool/mqueue   tmpfs   defaults,noatime,nosuid,mode=0700,gid=12,size=10m   0   0
+tmpfs           /var/log/nginx            tmpfs   defaults,noatime,nosuid,mode=7777,size=20m         0   0
 
 ## swap
 Отключаем файл подкачки
@@ -120,6 +123,16 @@ sudo apt install dnsmasq
 
 cd create_ap
 make install
+
+# Создаем ссылки для установки служб
+
+С uwsgi была проблема. Потребовалось сначала system enable uwsgi. Потом ребут.
+В проитвном случаи он не подгружал файл с васалами.
+ln uwsgi/cmeter.ini /etc/uwsgi/cmeter.ini
+ln uwsgi/uwsgi.service /etc/systemd/system/uwsgi.service 
+
+С ngix была проблема с правами доступа к папке /var/log/ngix. Решается через fstab
+ln web_ngix.conf /etc/nginx/sites-enabled/
 
 
   
