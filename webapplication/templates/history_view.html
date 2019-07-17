@@ -1,1 +1,35 @@
-<p> Я ИСТОРИЯ </p>
+<script src="/static/js/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="/static/js/jquery.dataTables.js"></script>
+<script src="/static/js/chartjs-plugin-annotation.min.js"></script>
+<script src="/static/js/chart_measure_config.js"></script>
+<script src="/static/js/chart_stat_bars_config.js"></script>
+<script src="/static/js/test_func.js"></script>
+<script src="/static/js/jquery.ui.datepicker-ru.js"></script>
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<div class="container-fluid" style="margin-top:80px">
+
+<dev class="row">
+	<dev class="col-xl-9 boxShadow">
+		<canvas id="history_chart" height="850"></canvas>
+	</dev>	
+
+	<dev class = "col-xl-3 boxShadow">
+		<p> Выбор типа графика. Почасовой/суточный </p>
+		<p> График в виде баров. с помощью каленадаря вводиться дата начала и конца </p>
+
+
+		<p>Дата: <input type="text" id="datepicker"></p>
+	</dev>	
+</dev>
+
+<script>
+$(function() {
+    $("#datepicker").datepicker($.datepicker.regional["ru"]),
+    $("#date").datepicker("setDate",null);;
+});
+</script>

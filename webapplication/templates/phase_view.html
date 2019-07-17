@@ -1,8 +1,6 @@
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script src="/static/js/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="/static/js/jquery.dataTables.js"></script>
 <script src="/static/js/chartjs-plugin-annotation.min.js"></script>
 <script src="/static/js/chart_measure_config.js"></script>
 <script src="/static/js/chart_stat_bars_config.js"></script>
@@ -10,28 +8,28 @@
 
 <style>
 table.dataTable tbody tr {
-  background-color: olive;
+  background-color: DarkCyan ;
 }
 </style>
 
-<div class="container-fluid" style="margin-top:100px">
+<div class="container-fluid" style="margin-top:80px">
 
 <dev class="row">
 
-	<dev class="col-sm-9 shadow">
-		<dev class="row">
-			<canvas id="phase1" width="300" height="50"></canvas>
+	<dev class="col-xl-9 shadow">
+		<dev class="row extra-bottom-padding  p-3 boxShadow">
+			<canvas id="phase1" height="250"></canvas>
 		</dev>
-		<dev class="row">
-			<canvas id="phase2" width="300" height="50"></canvas>
+		<dev class="row extra-bottom-padding  p-3 boxShadow">
+			<canvas id="phase2" height="250"></canvas>
 		</dev>
-		<dev class="row">
-			<canvas id="phase3" width="300" height="50"></canvas>
+		<dev class="row extra-bottom-padding  p-3 boxShadow">
+			<canvas id="phase3" height="250"></canvas>
 		</dev>
 	</dev>
 
-	<dev class = "col-sm-3">
-		<table id="myTable" class="table compact table-dark">
+	<dev class = "col-xl-3">
+		<table id="myTable" class="table compact table-dark ">
     <thead>
         <tr >
             <th>Канал</th>

@@ -11,21 +11,17 @@ function get_measure_chart_config(labels, data, data_pic, graph_name)
             [{ 
                 data: data,
                 pointRadius : 0,
-                borderColor: "#90780c",
-                backgroundColor: "rgba(34,34,34,0.1)", //Цвет заполнения квадрата 
+                borderColor: "Orange  ",
                 borderWidth : 2,
                 steppedLine :false,
-                strokeColor : "rgba(10, 51, 51, 0.2)",
-                scaleFontColor: "rgba(34, 51, 51, 0.3)",
-                fill: true
+                fill: false
             },
             { 
                 data: data_pic,
                 pointRadius : 0,
-                borderColor: "#ffffff",
-                backgroundColor: "rgba(34,34,34,0.1)", //Цвет заполнения квадрата 
+                borderColor: "Aqua",
                 borderWidth : 1,
-                borderDash: [2,2],
+                borderDash: [1,1],
                 steppedLine :false,
                 strokeColor : "rgba(10, 51, 51, 0.2)",
                 scaleFontColor: "rgba(34, 51, 51, 0.3)",
@@ -38,7 +34,9 @@ function get_measure_chart_config(labels, data, data_pic, graph_name)
             legend: {
                 display: false
             },
-            title: {display: false, text: graph_name},
+            title: {display: true, text: graph_name, 
+                    fontColor: 'rgb(255, 255, 255,0.6)',
+                    fontSize : 14},
             elements: 
             {
                 //line: {
@@ -66,20 +64,24 @@ function get_measure_chart_config(labels, data, data_pic, graph_name)
 
             scales: 
             {
-                gridLines: {color: "red", lineWidth: 3},
-
                 yAxes: 
                 [{
-                    ticks: {beginAtZero:true, max: 100},
+                    ticks: {beginAtZero:true, max: 100,
+                            fontColor : 'rgb(255, 255, 255,0.6)'},
                     scaleLabel: {
-                        display: true,
-                        labelString: graph_name
+                        display: false,
+                        labelString: graph_name,
+                        fontColor: 'white',
+                        fontSize : 16
                     },
+                    gridLines: { color: 'rgb(100, 100, 100,0.4)'}
                 }],
 
                 xAxes: 
                 [{
-                    ticks: {autoSkip: true, maxTicksLimit: 20}
+                    ticks: {autoSkip: true, maxTicksLimit: 20,
+                            fontColor : 'rgb(255, 255, 255,0.6)'},
+                    gridLines: { color: 'rgb(100, 100, 100,0.4)'}
                 }],
             },
 
@@ -89,10 +91,10 @@ function get_measure_chart_config(labels, data, data_pic, graph_name)
                         type: 'line',
                         mode: 'horizontal',
                         scaleID: 'y-axis-0',
-                        borderDash: [10,5],
+                        borderDash: [5,5],
                         value: 65,
-                        borderColor: 'rgb(200, 10, 2,0.5)',
-                        borderWidth: 2,
+                        borderColor: 'Magenta ',
+                        borderWidth: 1,
                         label: 
                         {
                             enabled: false,
@@ -102,7 +104,9 @@ function get_measure_chart_config(labels, data, data_pic, graph_name)
                             content: 'Максимально допустимый ток'
                         }
                     }]
-                }
+                },
+                responsive: true,
+                maintainAspectRatio: false,
             }
         }
     
