@@ -4,8 +4,8 @@
 <div class="container-fluid" style="margin-top:80px">
 
 <script src="/static/js/jquery.ui.datepicker-ru.js"></script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="/static/css/jquery-ui.css">
+<script src="/static/js/jquery-ui.js"></script>
 
 <dev class="row">
 
@@ -39,7 +39,7 @@
 <!-- Вкладка настроек названий обьектов-->
             <div class="tab-pane fade show active" id="tabPanel-names" role="tabpanel"> 
                 <form id="form-names">
-                    <h3>Общие настройки</h3>
+                    <h3>Именование обьектов</h3>
                     <div class="form-group">
                         <label for="channel1-Name">Название канала 1</label>
                         <input type="text" class="form-control" id="channel1-Name" placeholder="Фаза 1">
@@ -112,7 +112,7 @@
                                 </div>
                         </div>
                     </div>
-
+                    <p class="text-primary">*Для вступления настроек в силу, необходимо перезапустить службу сбора данных</p>
                     <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
                 </form>
             </div>
@@ -140,6 +140,7 @@
                         <label for="object-Name">Маска подсети</label>
                         <input type="text" class="form-control" required pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" id="object-Name" placeholder="255.255.255.0">
                     </div>
+                    <p class="text-primary">*Для вступления настроек в силу, необходимо перезапустить прибор</p>
                     <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
                 </form>
             </div>
