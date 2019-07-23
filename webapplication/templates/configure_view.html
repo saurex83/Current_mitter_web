@@ -1,33 +1,194 @@
 
 
 
-<div class="container-fluid" style="margin-top:100px">
-<p> Я Настройка </p>
+<div class="container-fluid" style="margin-top:80px">
+
+<script src="/static/js/jquery.ui.datepicker-ru.js"></script>
+<link rel="stylesheet" href="/static/css/jquery-ui.css">
+<script src="/static/js/jquery-ui.js"></script>
+
+<dev class="row">
+
+<!-- Навигационное меню -->
+    <dev class="col-xl-2">
+        <ul class="nav flex-column nav-pills" id="left-nav-panel" role="tablist" aria-orientation="vertical">
+
+            <li class="nav-item">
+                <a class="nav-link active"  data-toggle="pill" href="#tabPanel-names" role="tab" aria-selected="true">Имена обьектов</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#tabPanel-values" role="tab" aria-selected="false">Пороговые значения</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link"  data-toggle="pill" href="#tabPanel-network" role="tab" aria-selected="false">Сетевые настройки</a>
+            </li>
+         
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#tabPanel-time" role="tab" aria-selected="false">Время</a> 
+            </li>
+
+        </ul>
+    </dev>
+
+<!-- Основной контент страницы -->
+    <dev class="col-xl-5">
+        <div class="tab-content" id="left-nav-panel-tabContent">
+
+<!-- Вкладка настроек названий обьектов-->
+            <div class="tab-pane fade show active" id="tabPanel-names" role="tabpanel"> 
+                <form id="form-names">
+                    <h3>Именование обьектов</h3>
+                    <div class="form-group">
+                        <label for="channel1-Name">Название канала 1</label>
+                        <input type="text" class="form-control" id="channel1-Name" placeholder="Фаза 1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="channel2-Name">Название канала 2</label>
+                        <input type="text" class="form-control" id="channel2-Name" placeholder="Фаза 2">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="channel3-Name">Название канала 3</label>
+                        <input type="text" class="form-control" id="channel3-Name" placeholder="Фаза 3">
+                    </div>
+
+                   <div class="form-group">
+                        <label for="object-Name">Название обьекта</label>
+                        <input type="text" class="form-control" id="object-Name" placeholder="Белый дом">
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
+                </form>
+            </div>
+        
+<!-- Вкладка настроек пороговых границ-->
+            <div class="tab-pane fade" id="tabPanel-values" role="tabpanel" >
+                <form id="form-values">
+                    <h3>Пороговые значения</h3>
+
+                    <div class="form-group">
+                        <h5>Канал 1</h5>
+                        <div class="form-row">
+                                <div class="col-auto">
+                                    <label for="channel1-max-cur">Максимальный ток,А.</label>
+                                    <input type="number" min="1" max="1000" class="form-control" id="channel1-max-cur" value="30">
+                                </div>
+
+                                <div class="col-auto">
+                                    <label for="channel1-time-cur">Допустимое время,сек.</label>
+                                    <input type="number"  min="1" max="120" class="form-control" id="channel1-time-cur" value="10">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h5>Канал 2</h5>
+                        <div class="form-row">
+                                <div class="col-auto">
+                                    <label for="channel1-max-cur">Максимальный ток,А.</label>
+                                    <input type="number" min="1" max="1000" class="form-control" id="channel1-max-cur" value="30">
+                                </div>
+
+                                <div class="col-auto">
+                                    <label for="channel1-time-cur">Допустимое время,сек.</label>
+                                    <input type="number"  min="1" max="120" class="form-control" id="channel1-time-cur" value="10">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h5>Канал 3</h5>
+                        <div class="form-row">
+                                <div class="col-auto">
+                                    <label for="channel1-max-cur">Максимальный ток,А.</label>
+                                    <input type="number" min="1" max="1000" class="form-control" id="channel1-max-cur" value="30">
+                                </div>
+
+                                <div class="col-auto">
+                                    <label for="channel1-time-cur">Допустимое время,сек.</label>
+                                    <input type="number"  min="1" max="120" class="form-control" id="channel1-time-cur" value="10">
+                                </div>
+                        </div>
+                    </div>
+                    <p class="text-primary">*Для вступления настроек в силу, необходимо перезапустить службу сбора данных</p>
+                    <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
+                </form>
+            </div>
+
+<!-- Вкладка настроек сетевых параметров-->       
+            <div class="tab-pane fade" id="tabPanel-network" role="tabpanel" >
+               <form id="form-network">
+                    <h3>Сетевые настройки</h3>
+                    <div class="form-group">
+                        <label for="channel1-Name">Имя точки доступа</label>
+                        <input type="text" class="form-control" id="channel1-Name" placeholder="metter">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="channel2-Name">Пароль точки доступа</label>
+                        <input type="password" class="form-control" id="channel2-Name" placeholder="qazwsx">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="channel3-Name">Статический IP адресс</label>
+                        <input type="text" required pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" class="form-control" id="channel3-Name" placeholder="192.168.1.83">
+                    </div>
+
+                   <div class="form-group">
+                        <label for="object-Name">Маска подсети</label>
+                        <input type="text" class="form-control" required pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" id="object-Name" placeholder="255.255.255.0">
+                    </div>
+                    <p class="text-primary">*Для вступления настроек в силу, необходимо перезапустить прибор</p>
+                    <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
+                </form>
+            </div>
+
+<!-- Вкладка настроек времени-->
+            <div class="tab-pane fade" id="tabPanel-time" role="tabpanel" >
+               <form id="form-network">
+                    <h3>Время</h3>
+                    <div class="form-group">
+                        <label for="channel1-Name">Дата</label>
+                        <input type="text" class="form-control" id="datepicker" placeholder="Дата">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="channel2-Name">Часы</label>
+                        <input type="number" min="0" max="23" class="form-control" id="channel1-max-cur" value="10">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="channel3-Name">Минуты</label>
+                        <input type="number" min="0" max="59" class="form-control" id="channel1-max-cur" value="0"> 
+                    </div>
+
+                   <div class="form-group">
+                        <label for="object-Name">Секунды</label>
+                        <input type="number" min="0" max="59" class="form-control" id="channel1-max-cur" value="0"> 
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
+                </form>
+            </div>
+
+        </div>
+    </dev>
+</dev>
+
+
+
+</dev>
+
+
+
 </div>
 
 
 <script>
-	function tableCreate() {
-    var body = document.getElementsByTagName('body')[0];
-    var tbl = document.createElement('table');
-    tbl.style.width = '100%';
-    tbl.setAttribute('border', '1');
-    var tbdy = document.createElement('tbody');
-    for (var i = 0; i < 3; i++) {
-        var tr = document.createElement('tr');
-        for (var j = 0; j < 2; j++) {
-            if (i == 2 && j == 1) {
-                break
-            } else {
-                var td = document.createElement('td');
-                td.appendChild(document.createTextNode('\u0020'))
-                i == 1 && j == 1 ? td.setAttribute('rowSpan', '2') : null;
-                tr.appendChild(td)
-            }
-        }
-        tbdy.appendChild(tr);
-    }
-    tbl.appendChild(tbdy);
-    body.appendChild(tbl)
-}
+
+$(function() {
+    $("#datepicker").datepicker($.datepicker.regional["ru"]),
+    $("#date").datepicker("setDate",null);;
+});
 </script>
