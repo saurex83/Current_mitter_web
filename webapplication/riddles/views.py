@@ -4,7 +4,7 @@ from django import template
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 import datetime
-from .models import Curdata
+from .models import Curdata,Cnf
 
 def present(request):
 	#template = loader.get_template("index.html")
@@ -50,13 +50,68 @@ def polls_detail(request, pk):
     }}
     return JsonResponse(data)
 
-# Возвращает последнии sec данных канала ch
-def lastdata_view(request, ch, sec):
+
+# Ищем максимальное значение среднего тока в запрошенных данных
+def find_max_current(data, ch):
+	maximum = {'time' : '', 'value' : -1}
+	for i in data:
+		if i['ch'] != ch:
+			continue
+		if i['c_avr'] > maximum['value']:
+			maximum['value'] = i['c_avr']
+			maximum['time'] = i['time']
+	return maximum
+
+
+# Возвращает последнии sec данных трех каналов
+def lastdata_view(request, sec):
 	end_time = datetime.datetime.now()	
 	start_time = end_time - datetime.timedelta(seconds = sec)
-	data = Curdata.objects.filter(time__range =(start_time,end_time)).filter(ch = ch)
-	#data = Curdata.objects.all()[:10]
+	
+	# Подгружаем данные из временного диапазон
+	data = Curdata.objects.filter(time__range =(start_time,end_time))
+	
+	# Загружаем настройки
+	config = Cnf.objects.all()
 
-	print(data)
-	res = {'result': list(data.values("c_avr", "c_max", "time", "ch")), "start":start_time, "endtime":end_time }
+
+	lables = list()
+	ch1_avr = list()
+	ch2_avr = list()
+	ch3_avr = list()
+	ch1_max = list()
+	ch2_max = list()
+	ch3_max = list()
+
+	data = list(data.values("time", "ch", "c_avr", "c_max"))
+
+	for i in data:
+		if i['ch'] == 1:
+			time = i['time']
+			time = time.strftime("%H:%M:%S")
+			lables.append(time)
+			ch1_avr.append(i["c_avr"])
+			ch1_max.append(i["c_max"])
+		if i['ch'] == 2:
+			ch2_avr.append(i["c_avr"])
+			ch2_max.append(i["c_max"])
+		if i['ch'] == 3:
+			ch3_avr.append(i["c_avr"])
+			ch3_max.append(i["c_max"])
+
+	res = {
+		'labels':lables, 'ch1_avr':ch1_avr, 
+		'ch2_avr':ch2_avr, 'ch3_avr':ch3_avr, 
+		'ch1_max' :ch1_max, 'ch2_max' :ch2_max,
+		'ch3_max':ch3_max,
+		'ch1_avr_now' : ch1_avr[-1],
+		'ch2_avr_now' : ch2_avr[-1],
+		'ch3_avr_now' : ch3_avr[-1],
+		'ch1_pic_now' : ch1_max[-1],
+		'ch2_pic_now' : ch2_max[-1],
+		'ch3_pic_now' : ch3_max[-1],
+		'ch1_max_val' :find_max_current(data, 1),
+		'ch2_max_val' :find_max_current(data, 2),
+		'ch3_max_val' :find_max_current(data, 3)
+		}
 	return JsonResponse(res)

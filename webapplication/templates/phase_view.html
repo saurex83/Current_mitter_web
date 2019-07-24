@@ -18,13 +18,13 @@ table.dataTable tbody tr {
 
 	<dev class="col-xl-9 shadow">
 		<dev class="row extra-bottom-padding  p-3 boxShadow">
-			<canvas id="phase1" height="250"></canvas>
+			<canvas id="phase1" height="220"></canvas>
 		</dev>
 		<dev class="row extra-bottom-padding  p-3 boxShadow">
-			<canvas id="phase2" height="250"></canvas>
+			<canvas id="phase2" height="220"></canvas>
 		</dev>
 		<dev class="row extra-bottom-padding  p-3 boxShadow">
-			<canvas id="phase3" height="250"></canvas>
+			<canvas id="phase3" height="220"></canvas>
 		</dev>
 	</dev>
 
@@ -41,21 +41,21 @@ table.dataTable tbody tr {
     <tbody>
         <tr>
             <th scope="row">Фаза 1</th>
-            <td>12.56 А</td>
-            <td>14.3 А</td>
-            <td>45.7 А</td>
+            <td id = "ch1_avr_now"></td>
+            <td id = "ch1_max_val"></td>
+            <td id = "ch1_pic_now"></td>
         </tr>
         <tr>
             <th scope="row">Фаза 2</th>
-            <td>12.56 А</td>
-            <td>14.3 А</td>
-            <td>45.7 А</td>
+            <td id = "ch2_avr_now"></td>
+            <td id = "ch2_max_val"></td>
+            <td id = "ch2_pic_now"></td>
         </tr>
         <tr>
             <th scope="row">Фаза 3</th>
-            <td>12.56 А</td>
-            <td>14.3 А</td>
-            <td>45.7 А</td>
+            <td id = "ch3_avr_now"></td>
+            <td id = "ch3_max_val"></td>
+            <td id = "ch3_pic_now"></td>
         </tr>
     </tbody>
 </table>
@@ -74,17 +74,6 @@ result3.innerHTML="45.1А"
 </script>
 
 
-<script>
-
-var bar_chart_conf = get_stat_bars_config(
-	["Фаза 1", "Фаза 2", "Фаза 3"], 
-	[63,55,78], [56,20,10], 
-	[70,70,70])
-
-new Chart(document.getElementById("statistic"),bar_chart_conf);
-
-</script>
-
 <script>	
 var fhase1_data_val=[];
 var fhase2_data_val=[];
@@ -93,52 +82,112 @@ var fhase1_data_pic=[]
 var fhase2_data_pic=[]
 var fhase3_data_pic=[]
 var fhase1_label =[];
-var val;
-for (var i = 1; i <= 300; i++) {
-	val = getSinus(i,10)
-	fhase1_data_val.push(val)
-	val = getSinus(i+100,5)
-	fhase2_data_val.push(val)
-	val = getSinus(i+200,12)
-	fhase3_data_val.push(val)
-	fhase1_label.push(i)
-
-	val = getSinus_shift(i,10,4)
-	fhase1_data_pic.push(val)
-
-	val = getSinus_shift(i+100,5,1)
-	fhase2_data_pic.push(val)
-
-	val = getSinus_shift(i+200,12,7)
-	fhase3_data_pic.push(val)
-	
-}
 
 
-var chart_conf_1 =  get_measure_chart_config(
-	fhase1_label,
-	fhase1_data_val,
-	fhase1_data_pic,
-	"Фаза 1,А" 
-	)
-var chart_conf_2 =  get_measure_chart_config(
-	fhase1_label,
-	fhase2_data_val,
-	fhase2_data_pic,
-	"Фаза 2,А" 
-	)
-var chart_conf_3 =  get_measure_chart_config(
-	fhase1_label,
-	fhase3_data_val,
-	fhase3_data_pic,
-	"Фаза 3,А" 
-	)
-
-var mychart1 = new Chart(document.getElementById("phase1"), chart_conf_1);
-var mychart2 = new Chart(document.getElementById("phase2"), chart_conf_2);
-var mychart3 = new Chart(document.getElementById("phase3"), chart_conf_3);
 </script>
 
+
+<script>
+	var fhase1_label 
+	var fhase1_data_val 
+	var fhase1_data_pic 
+
+	var chart_conf_1 =  get_measure_chart_config(
+		fhase1_label,
+		fhase1_data_val,
+		fhase1_data_pic,
+		"Фаза 1,А" 
+		)
+	var chart_conf_2 =  get_measure_chart_config(
+		fhase1_label,
+		fhase2_data_val,
+		fhase2_data_pic,
+		"Фаза 2,А" 
+		)
+	var chart_conf_3 =  get_measure_chart_config(
+		fhase1_label,
+		fhase3_data_val,
+		fhase3_data_pic,
+		"Фаза 3,А" 
+		)
+
+	var chart1 = new Chart(document.getElementById("phase1"), chart_conf_1);
+	var chart2 = new Chart(document.getElementById("phase2"), chart_conf_2);
+	var chart3 = new Chart(document.getElementById("phase3"), chart_conf_3);
+</script>
+
+<script>
+
+
+function update_charts(data){
+
+	chart1.data.labels = data['labels'];
+	chart2.data.labels = data['labels'];
+	chart3.data.labels = data['labels'];
+
+	chart1.data.datasets[0].data = data['ch1_avr']	
+	chart1.data.datasets[1].data = data['ch1_max']
+
+	chart2.data.datasets[0].data = data['ch2_avr']	
+	chart2.data.datasets[1].data = data['ch2_max']	
+
+	chart3.data.datasets[0].data = data['ch3_avr']	
+	chart3.data.datasets[1].data = data['ch3_max']	
+	
+	chart1.update();
+	chart2.update();
+	chart3.update();
+}
+
+function update_table(data){
+	var val = document.getElementById("ch1_avr_now");
+	val.innerHTML = data['ch1_avr_now'].toFixed(1) + " A"
+	var val = document.getElementById("ch2_avr_now");
+	val.innerHTML = data['ch2_avr_now'].toFixed(1) + " A"
+	var val = document.getElementById("ch3_avr_now");
+	val.innerHTML = data['ch3_avr_now'].toFixed(1) + " A"
+
+	var val = document.getElementById("ch1_max_val");
+	val.innerHTML = data['ch1_max_val']['value'].toFixed(1) + " A"
+	var val = document.getElementById("ch2_max_val");
+	val.innerHTML = data['ch2_max_val']['value'].toFixed(1) + " A"
+	var val = document.getElementById("ch3_max_val");
+	val.innerHTML = data['ch3_max_val']['value'].toFixed(1) + " A"
+
+	var val = document.getElementById("ch1_pic_now");
+	val.innerHTML = data['ch1_pic_now'].toFixed(1) + " A"
+	var val = document.getElementById("ch2_pic_now");
+	val.innerHTML = data['ch2_pic_now'].toFixed(1) + " A"
+	var val = document.getElementById("ch3_pic_now");
+	val.innerHTML = data['ch3_pic_now'].toFixed(1) + " A"
+}
+
+function updata_lastvalue(channel, sec)
+{
+jQuery.ajax({
+            url: "/api/lastdata/600/",
+            type: "GET",
+
+            contentType: 'application/json; charset=utf-8',
+            success: function(resultData) {
+				update_charts(resultData)
+				update_table(resultData)
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+            	alert( "Плохо" );
+            },
+
+            timeout: 120000,
+        });	
+}
+</script>
+
+<script>
+	// начать повторы с интервалом 2 сек
+	var timerId = setInterval(function() {
+  	updata_lastvalue(1,1)
+}, 2000);
+</script>
 
 
 <script>

@@ -57,8 +57,9 @@ function get_measure_chart_config(labels, data, data_pic, graph_name)
 
             zoom: {
                 enabled: true,
-                mode: 'xy',
-                rangeMin: {x: 0, y: 0},
+                drag: false,
+                mode: 'y',
+                rangeMin: { y: 0},
                 rangeMax: {y: 100},
             },
 
@@ -79,8 +80,10 @@ function get_measure_chart_config(labels, data, data_pic, graph_name)
 
                 xAxes: 
                 [{
-                    ticks: {autoSkip: true, maxTicksLimit: 20,
-                            fontColor : 'rgb(255, 255, 255,0.6)'},
+                    ticks: {autoSkip: true, maxTicksLimit: 10,
+                            fontColor : 'rgb(255, 255, 255,0.6)',
+                            maxRotation: 0,
+                            minRotation: 0},
                     gridLines: { color: 'rgb(100, 100, 100,0.4)'}
                 }],
             },
