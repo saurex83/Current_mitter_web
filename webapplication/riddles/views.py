@@ -6,6 +6,14 @@ from django.http import JsonResponse
 import datetime
 from .models import Curdata,Cnf
 
+PARAMS_DEFAULT = {"MAX_CURR_CH1" : "50", "MAX_CURR_CH2" : "50",
+					"MAX_CURR_CH3" : "50", "MAX_TIME_CH1" : "3",
+					"MAX_TIME_CH2" : "3", "MAX_TIME_CH3" : "3",
+					"NAME_CH1" : "Фаза 1",
+					"NAME_CH2" : "Фаза 2", "NAME_CH3" : "Фаза 3",
+					"NAME_OBJ" : "Помещение #1" }
+
+
 def present(request):
 	#template = loader.get_template("index.html")
 	template = loader.get_template("present.html")
@@ -62,6 +70,86 @@ def find_max_current(data, ch):
 			maximum['time'] = i['time']
 	return maximum
 
+# Загружаем настройки из базы данных, либо устанавливаем по умолчанию
+def update_params():
+	PARAMS = PARAMS_DEFAULT
+
+	# Загружаем настройки
+	config = Cnf.objects.all()
+	config = list(config.values("name", "value"))
+	
+	for item in config:
+		PARAMS[item['name']] = item['value']
+
+	return(PARAMS)
+
+
+
+def lastdata_view_aver_1min(request, minute):
+	""" Возвращаем данные усредненные к 1 минуте """
+	time = datetime.datetime.now()
+	
+	# Округлим текущее время до минуты
+	time = time.replace(second = 0, microsecond = 0)
+	min1 = datetime.timedelta(seconds = 60)
+
+	time_range = list()
+	
+	res = { 'labels' : [] , 'ch1_avr' : [], 'ch2_avr' : [], 'ch3_avr' : [],
+	'ch1_max' : [], 'ch2_max' : [], 'ch3_max' : []}
+
+
+	# Формируем поминутный список интервалов времени
+	for i in range(0,minute):
+		time_range.append({'end' : time, 'start' : time-min1 })
+		time = time -min1
+
+	# загружаем данные соответсвующие временным отрезкам
+	for ti in time_range:
+		st = ti['start']
+		en = ti['end']
+		data = Curdata.objects.filter(time__range =(st,en))
+		data = list(data.values("ch", "c_avr", "c_max"))
+		# усредняем полученные данные
+		tmp_c1_avr = 0;
+		tmp_c2_avr = 0;
+		tmp_c3_avr = 0;
+		tmp_c1_max = 0;
+		tmp_c2_max = 0;
+		tmp_c3_max = 0;
+
+		cnt = 0 # количество измерений
+		for i in data:
+			cnt += 1
+			if i['ch'] == 1:
+				tmp_c1_avr += i['c_avr']
+				tmp_c1_max += i['c_max']
+			if i['ch'] == 2:
+				tmp_c2_avr += i['c_avr']
+				tmp_c2_max += i['c_max']
+			if i['ch'] == 3:
+				tmp_c3_avr += i['c_avr']
+				tmp_c3_max += i['c_max']
+
+		if cnt !=0 :
+			tmp_c1_avr = tmp_c1_avr / cnt
+			tmp_c2_avr = tmp_c2_avr / cnt
+			tmp_c3_avr = tmp_c3_avr / cnt
+			tmp_c1_max = tmp_c1_max / cnt
+			tmp_c2_max = tmp_c2_max / cnt
+			tmp_c3_max = tmp_c3_max / cnt
+
+		res['ch1_avr'].append(tmp_c1_avr)
+		res['ch2_avr'].append(tmp_c2_avr)
+		res['ch3_avr'].append(tmp_c3_avr)
+		res['ch1_max'].append(tmp_c1_max)
+		res['ch2_max'].append(tmp_c2_max)
+		res['ch3_max'].append(tmp_c3_max)
+		res['labels'].append(en)
+
+	##print(time_range)
+	#res = {"timei" : time_range}
+	return JsonResponse(res)
 
 # Возвращает последнии sec данных трех каналов
 def lastdata_view(request, sec):
@@ -70,9 +158,7 @@ def lastdata_view(request, sec):
 	
 	# Подгружаем данные из временного диапазон
 	data = Curdata.objects.filter(time__range =(start_time,end_time))
-	
-	# Загружаем настройки
-	config = Cnf.objects.all()
+	params = update_params()
 
 
 	lables = list()
@@ -112,6 +198,13 @@ def lastdata_view(request, sec):
 		'ch3_pic_now' : ch3_max[-1],
 		'ch1_max_val' :find_max_current(data, 1),
 		'ch2_max_val' :find_max_current(data, 2),
-		'ch3_max_val' :find_max_current(data, 3)
+		'ch3_max_val' :find_max_current(data, 3),
+		'MAX_CURR_CH1' : float(params['MAX_CURR_CH1']),
+		'MAX_CURR_CH2' : float(params['MAX_CURR_CH2']),
+		'MAX_CURR_CH3' : float(params['MAX_CURR_CH3']),
+		'NAME_CH1' : params['NAME_CH1'],
+		'NAME_CH2' : params['NAME_CH2'],
+		'NAME_CH3' : params['NAME_CH3'],
+		'NAME_OBJ' : params['NAME_OBJ']
 		}
 	return JsonResponse(res)

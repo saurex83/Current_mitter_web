@@ -3,8 +3,6 @@
 <script type="text/javascript" charset="utf8" src="/static/js/jquery.dataTables.js"></script>
 <script src="/static/js/chartjs-plugin-annotation.min.js"></script>
 <script src="/static/js/chart_measure_config.js"></script>
-<script src="/static/js/chart_stat_bars_config.js"></script>
-<script src="/static/js/test_func.js"></script>
 
 <style>
 table.dataTable tbody tr {
@@ -32,30 +30,30 @@ table.dataTable tbody tr {
 		<table id="myTable" class="table compact table-dark ">
     <thead>
         <tr >
-            <th>Канал</th>
-            <th>Ток</th>
-            <th>Макс. ток</th>
-            <th>Пик. ток</th>
+            <th class="text-center" >Канал</th>
+            <th class="text-center" >Ток</th>
+            <th class="text-center" >Макс. ток</th>
+            <th class="text-center" >Пик. ток</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <th scope="row">Фаза 1</th>
-            <td id = "ch1_avr_now"></td>
-            <td id = "ch1_max_val"></td>
-            <td id = "ch1_pic_now"></td>
+            <th class="text-center" scope="row">1</th>
+            <td class="text-center" id = "ch1_avr_now"></td>
+            <td class="text-center" id = "ch1_max_val"></td>
+            <td class="text-center" id = "ch1_pic_now"></td>
         </tr>
         <tr>
-            <th scope="row">Фаза 2</th>
-            <td id = "ch2_avr_now"></td>
-            <td id = "ch2_max_val"></td>
-            <td id = "ch2_pic_now"></td>
+            <th class="text-center" scope="row">2</th>
+            <td class="text-center" id = "ch2_avr_now"></td>
+            <td class="text-center" id = "ch2_max_val"></td>
+            <td class="text-center" id = "ch2_pic_now"></td>
         </tr>
         <tr>
-            <th scope="row">Фаза 3</th>
-            <td id = "ch3_avr_now"></td>
-            <td id = "ch3_max_val"></td>
-            <td id = "ch3_pic_now"></td>
+            <th class="text-center" scope="row">3</th>
+            <td class="text-center" id = "ch3_avr_now"></td>
+            <td class="text-center" id = "ch3_max_val"></td>
+            <td class="text-center" id = "ch3_pic_now"></td>
         </tr>
     </tbody>
 </table>
@@ -134,6 +132,15 @@ function update_charts(data){
 	chart3.data.datasets[0].data = data['ch3_avr']	
 	chart3.data.datasets[1].data = data['ch3_max']	
 	
+	chart1.options.title['text'] = "Канал 1: "+data['NAME_CH1']
+	chart2.options.title['text'] = "Канал 2: "+data['NAME_CH2']
+	chart3.options.title['text'] = "Канал 3: "+data['NAME_CH3']
+
+
+	chart1.options.annotation.annotations[0]['value'] = data['MAX_CURR_CH1']
+	chart2.options.annotation.annotations[0]['value'] = data['MAX_CURR_CH2']
+	chart3.options.annotation.annotations[0]['value'] = data['MAX_CURR_CH3']
+
 	chart1.update();
 	chart2.update();
 	chart3.update();
