@@ -4,6 +4,7 @@ from django import template
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 import datetime
+import calendar
 from .models import Curdata,Cnf
 
 PARAMS_DEFAULT = {"MAX_CURR_CH1" : "50", "MAX_CURR_CH2" : "50",
@@ -84,6 +85,162 @@ def update_params():
 	return(PARAMS)
 
 
+def lastdata_view_1month(request):
+	""" Возвращаем данные усредненные к 10 минутам """
+	time = datetime.datetime.now()
+	
+	# Устанавливаем на начало месяца
+	time = time.replace(day = 1, hour = 0, minute = 0,second = 0, microsecond = 0)
+	# Количество дней в месяце
+	days = calendar.monthrange(time.year, time.month)[1]
+	#hour_cnt = days*24 # Количество часов в месяце
+
+	min60 = datetime.timedelta(days = 1)
+	time -=min60
+	time_range = list()
+	
+	res = { 'labels' : [] , 'ch1_avr' : [], 'ch2_avr' : [], 'ch3_avr' : [],
+	'ch1_max' : [], 'ch2_max' : [], 'ch3_max' : []}
+
+
+	# Перебираем все часы в месяце
+	for i in range(0,days):
+		time_range.append({'end' : time+min60, 'start' : time })
+		time = time + min60
+
+	# загружаем данные соответсвующие временным отрезкам
+	for ti in time_range:
+		st = ti['start']
+		en = ti['end']
+		data = Curdata.objects.filter(time__range =(st,en))
+		data = list(data.values("ch", "c_avr", "c_max"))
+		# усредняем полученные данные
+		tmp_c1_avr = 0;
+		tmp_c2_avr = 0;
+		tmp_c3_avr = 0;
+		tmp_c1_max = 0;
+		tmp_c2_max = 0;
+		tmp_c3_max = 0;
+
+		cnt = 0 # количество измерений
+		for i in data:
+			cnt += 1
+			if i['ch'] == 1:
+				tmp_c1_avr += i['c_avr']
+				tmp_c1_max += i['c_max']
+			if i['ch'] == 2:
+				tmp_c2_avr += i['c_avr']
+				tmp_c2_max += i['c_max']
+			if i['ch'] == 3:
+				tmp_c3_avr += i['c_avr']
+				tmp_c3_max += i['c_max']
+
+		if cnt !=0 :
+			tmp_c1_avr = tmp_c1_avr / cnt
+			tmp_c2_avr = tmp_c2_avr / cnt
+			tmp_c3_avr = tmp_c3_avr / cnt
+			tmp_c1_max = tmp_c1_max / cnt
+			tmp_c2_max = tmp_c2_max / cnt
+			tmp_c3_max = tmp_c3_max / cnt
+
+		res['ch1_avr'].append(tmp_c1_avr)
+		res['ch2_avr'].append(tmp_c2_avr)
+		res['ch3_avr'].append(tmp_c3_avr)
+		res['ch1_max'].append(tmp_c1_max)
+		res['ch2_max'].append(tmp_c2_max)
+		res['ch3_max'].append(tmp_c3_max)
+		res['labels'].append(en.strftime("%d/%m/%y"))
+
+
+		params = update_params()
+		res['MAX_CURR_CH1'] = float(params['MAX_CURR_CH1'])
+		res['MAX_CURR_CH2'] = float(params['MAX_CURR_CH2'])
+		res['MAX_CURR_CH3'] = float(params['MAX_CURR_CH3'])
+		res['NAME_CH1'] =  params['NAME_CH1']
+		res['NAME_CH2'] = params['NAME_CH2']
+		res['NAME_CH3'] = params['NAME_CH3']
+		res['NAME_OBJ'] = params['NAME_OBJ']
+		
+	##print(time_range)
+	#res = {"timei" : time_range}
+	return JsonResponse(res)
+
+def lastdata_view_1day(request):
+	""" Возвращаем данные усредненные к 10 минутам """
+	time = datetime.datetime.now()
+	
+	# Устанавливаем на начало дня
+	time = time.replace(hour = 0, minute = 0,second = 0, microsecond = 0)
+
+	min10 = datetime.timedelta(seconds = 600)
+
+	time_range = list()
+	
+	res = { 'labels' : [] , 'ch1_avr' : [], 'ch2_avr' : [], 'ch3_avr' : [],
+	'ch1_max' : [], 'ch2_max' : [], 'ch3_max' : []}
+
+
+	# В сутках всего 144 дисятиминутных интервалом
+	for i in range(0,144):
+		time_range.append({'end' : time+min10, 'start' : time })
+		time = time + min10
+
+	# загружаем данные соответсвующие временным отрезкам
+	for ti in time_range:
+		st = ti['start']
+		en = ti['end']
+		data = Curdata.objects.filter(time__range =(st,en))
+		data = list(data.values("ch", "c_avr", "c_max"))
+		# усредняем полученные данные
+		tmp_c1_avr = 0;
+		tmp_c2_avr = 0;
+		tmp_c3_avr = 0;
+		tmp_c1_max = 0;
+		tmp_c2_max = 0;
+		tmp_c3_max = 0;
+
+		cnt = 0 # количество измерений
+		for i in data:
+			cnt += 1
+			if i['ch'] == 1:
+				tmp_c1_avr += i['c_avr']
+				tmp_c1_max += i['c_max']
+			if i['ch'] == 2:
+				tmp_c2_avr += i['c_avr']
+				tmp_c2_max += i['c_max']
+			if i['ch'] == 3:
+				tmp_c3_avr += i['c_avr']
+				tmp_c3_max += i['c_max']
+
+		if cnt !=0 :
+			tmp_c1_avr = tmp_c1_avr / cnt
+			tmp_c2_avr = tmp_c2_avr / cnt
+			tmp_c3_avr = tmp_c3_avr / cnt
+			tmp_c1_max = tmp_c1_max / cnt
+			tmp_c2_max = tmp_c2_max / cnt
+			tmp_c3_max = tmp_c3_max / cnt
+
+		res['ch1_avr'].append(tmp_c1_avr)
+		res['ch2_avr'].append(tmp_c2_avr)
+		res['ch3_avr'].append(tmp_c3_avr)
+		res['ch1_max'].append(tmp_c1_max)
+		res['ch2_max'].append(tmp_c2_max)
+		res['ch3_max'].append(tmp_c3_max)
+		res['labels'].append(en.strftime("%H:%M"))
+
+
+		params = update_params()
+		res['MAX_CURR_CH1'] = float(params['MAX_CURR_CH1'])
+		res['MAX_CURR_CH2'] = float(params['MAX_CURR_CH2'])
+		res['MAX_CURR_CH3'] = float(params['MAX_CURR_CH3'])
+		res['NAME_CH1'] =  params['NAME_CH1']
+		res['NAME_CH2'] = params['NAME_CH2']
+		res['NAME_CH3'] = params['NAME_CH3']
+		res['NAME_OBJ'] = params['NAME_OBJ']
+		
+	##print(time_range)
+	#res = {"timei" : time_range}
+	return JsonResponse(res)
 
 def lastdata_view_aver_1min(request, minute):
 	""" Возвращаем данные усредненные к 1 минуте """
@@ -139,14 +296,32 @@ def lastdata_view_aver_1min(request, minute):
 			tmp_c2_max = tmp_c2_max / cnt
 			tmp_c3_max = tmp_c3_max / cnt
 
-		res['ch1_avr'].append(tmp_c1_avr)
-		res['ch2_avr'].append(tmp_c2_avr)
-		res['ch3_avr'].append(tmp_c3_avr)
-		res['ch1_max'].append(tmp_c1_max)
-		res['ch2_max'].append(tmp_c2_max)
-		res['ch3_max'].append(tmp_c3_max)
-		res['labels'].append(en)
+		res['ch1_avr'].insert(0,tmp_c1_avr)
+		res['ch2_avr'].insert(0,tmp_c2_avr)
+		res['ch3_avr'].insert(0,tmp_c3_avr)
+		res['ch1_max'].insert(0,tmp_c1_max)
+		res['ch2_max'].insert(0,tmp_c2_max)
+		res['ch3_max'].insert(0,tmp_c3_max)
+		res['labels'].insert(0,en.strftime("%H:%M"))
 
+		#res['ch1_avr'].reverse()
+		#res['ch2_avr'].reverse()
+	#	res['ch3_avr'].reverse()
+	#	res['ch1_max'].reverse()
+	#	res['ch2_max'].reverse()
+	#	res['ch3_max'].reverse()
+	#	res['labels'].reverse()
+
+		
+		params = update_params()
+		res['MAX_CURR_CH1'] = float(params['MAX_CURR_CH1'])
+		res['MAX_CURR_CH2'] = float(params['MAX_CURR_CH2'])
+		res['MAX_CURR_CH3'] = float(params['MAX_CURR_CH3'])
+		res['NAME_CH1'] =  params['NAME_CH1']
+		res['NAME_CH2'] = params['NAME_CH2']
+		res['NAME_CH3'] = params['NAME_CH3']
+		res['NAME_OBJ'] = params['NAME_OBJ']
+		
 	##print(time_range)
 	#res = {"timei" : time_range}
 	return JsonResponse(res)

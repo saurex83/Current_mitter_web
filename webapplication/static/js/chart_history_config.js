@@ -38,6 +38,45 @@ function get_history_chart_config(labels, data, data_pic, graph_name)
                 scaleFontColor: "rgba(34, 51, 51, 0.3)",
                 fill: false
             },
+
+            { 
+                label : 'четвертый',
+                data: [70,90,80],
+                pointRadius : 0,
+                borderColor: "lime",
+                borderDash: [1,3],
+                borderWidth : 1,
+                steppedLine :false,
+                strokeColor : "rgba(10, 51, 51, 0.2)",
+                scaleFontColor: "rgba(34, 51, 51, 0.3)",
+                fill: false
+            },
+
+            { 
+                label : 'пятый',
+                data: [70,90,80],
+                pointRadius : 0,
+                borderColor: "Aqua",
+                borderDash: [1,3],
+                borderWidth : 1,
+                steppedLine :false,
+                strokeColor : "rgba(10, 51, 51, 0.2)",
+                scaleFontColor: "rgba(34, 51, 51, 0.3)",
+                fill: false
+            },
+            { 
+                label : 'шестой',
+                data: [70,90,80],
+                pointRadius : 0,
+                borderColor: "yellow",
+                borderDash: [1,3],
+                borderWidth : 1,
+                steppedLine :false,
+                strokeColor : "rgba(10, 51, 51, 0.2)",
+                scaleFontColor: "rgba(34, 51, 51, 0.3)",
+                fill: false
+            },
+
             ]
         },
 
@@ -62,9 +101,9 @@ function get_history_chart_config(labels, data, data_pic, graph_name)
             pan: 
             {
                 enabled: true,
-                mode: 'y',
-                rangeMin: {x: 0, y: 0},
-                rangeMax: {x: 1200,y: 100},
+                mode: 'xy',
+                rangeMin: { y: 0},
+                rangeMax: {y: 100},
             },
 
             zoom: {
@@ -72,7 +111,7 @@ function get_history_chart_config(labels, data, data_pic, graph_name)
                 drag: false,
                 mode: 'y',
                 rangeMin: { y: 0},
-                rangeMax: {y: 100},
+                rangeMax: { y: 100},
             },
 
             scales: 
@@ -108,7 +147,7 @@ function get_history_chart_config(labels, data, data_pic, graph_name)
                         scaleID: 'y-axis-0',
                         borderDash: [5,5],
                         value: 65,
-                        borderColor: 'Magenta ',
+                        borderColor: 'lime ',
                         borderWidth: 1,
                         label: 
                         {
@@ -118,7 +157,42 @@ function get_history_chart_config(labels, data, data_pic, graph_name)
                             backgroundColor: "rgba(34,1,34,0.3)",
                             content: 'Максимально допустимый ток'
                         }
-                    }]
+                    },
+                    {
+                        type: 'line',
+                        mode: 'horizontal',
+                        scaleID: 'y-axis-0',
+                        borderDash: [5,5],
+                        value: 65,
+                        borderColor: 'Aqua ',
+                        borderWidth: 1,
+                        label: 
+                        {
+                            enabled: false,
+                            fontSize: 10,
+                            position : "left",
+                            backgroundColor: "rgba(34,1,34,0.3)",
+                            content: 'Максимально допустимый ток'
+                        }
+                    },
+                    {
+                        type: 'line',
+                        mode: 'horizontal',
+                        scaleID: 'y-axis-0',
+                        borderDash: [5,5],
+                        value: 65,
+                        borderColor: 'yellow ',
+                        borderWidth: 1,
+                        label: 
+                        {
+                            enabled: false,
+                            fontSize: 10,
+                            position : "left",
+                            backgroundColor: "rgba(34,1,34,0.3)",
+                            content: 'Максимально допустимый ток'
+                        }
+                    }
+                    ]
                 },
                 responsive: true,
                 maintainAspectRatio: false,

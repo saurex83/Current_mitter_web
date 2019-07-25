@@ -72,10 +72,7 @@
 				<button type="button" id ="btn-day" class="btn btn-primary">За день</button>
 			</dev>
 			<dev class = "col">
-				<button type="button" class="btn btn-primary">За неделю</button>
-			</dev>
-			<dev class = "col">
-				<button type="button" class="btn btn-primary">За месяц</button>
+				<button type="button" id ="btn-month" class="btn btn-primary">За месяц</button>
 			</dev>
 					
 		</dev>
@@ -96,10 +93,21 @@
 		history_chart.data.datasets[1].data = data['ch2_avr']
 		history_chart.data.datasets[2].data = data['ch3_avr']
 
+		history_chart.data.datasets[3].data = data['ch1_max']	
+		history_chart.data.datasets[4].data = data['ch2_max']
+		history_chart.data.datasets[5].data = data['ch3_max']
 
-		history_chart.data.datasets[0].label = "Канал 1: "+data['NAME_CH1']
-		history_chart.data.datasets[1].label = "Канал 2: "+data['NAME_CH2']
-		history_chart.data.datasets[2].label = "Канал 3: "+data['NAME_CH3']
+		history_chart.data.datasets[0].label = "1: "+data['NAME_CH1']
+		history_chart.data.datasets[1].label = "2: "+data['NAME_CH2']
+		history_chart.data.datasets[2].label = "3: "+data['NAME_CH3']
+
+		history_chart.data.datasets[3].label = "1: "+data['NAME_CH1']
+		history_chart.data.datasets[4].label = "2: "+data['NAME_CH2']
+		history_chart.data.datasets[5].label = "3: "+data['NAME_CH3']
+
+		history_chart.options.annotation.annotations[0]['value'] = data['MAX_CURR_CH1']
+		history_chart.options.annotation.annotations[1]['value'] = data['MAX_CURR_CH2']
+		history_chart.options.annotation.annotations[2]['value'] = data['MAX_CURR_CH3']
 
 		history_chart.update();
 	}
@@ -122,6 +130,48 @@
             timeout: 120000,
         });		
 	}
+
+	function update_last_day()
+	{
+		jQuery.ajax({
+            url: "/api/lastdata_view_1day/",
+            type: "GET",
+
+            contentType: 'application/json; charset=utf-8',
+            success: function(resultData) {
+				update_history_chart(resultData)
+
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+            	alert( "Плохо" );
+            },
+
+            timeout: 120000,
+        });		
+	}
+
+	function update_last_month()
+	{
+		jQuery.ajax({
+            url: "/api/lastdata_view_1month/",
+            type: "GET",
+
+            contentType: 'application/json; charset=utf-8',
+            success: function(resultData) {
+				update_history_chart(resultData)
+
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+            	alert( "Плохо" );
+            },
+
+            timeout: 120000,
+        });		
+	}
+
+
+	
+
 </script>
 
 <script>
@@ -148,4 +198,8 @@ $('#timepicker').timepicker({
 
 <script>
 	document.getElementById("btn-hour").onclick=update_last_hour
+	document.getElementById("btn-day").onclick=update_last_day
+	document.getElementById("btn-month").onclick=update_last_month
+
+	
 </script>
