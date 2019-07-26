@@ -4,14 +4,15 @@
 <script src="/static/js/chartjs-plugin-annotation.min.js"></script>
 <script src="/static/js/chart_history_config.js"></script>
 <script src="/static/js/jquery.ui.datepicker-ru.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script src="/static/js/chartjs-plugin-annotation.min.js"></script>
+<script src="/static/js/moment.js"></script>
+<link rel="stylesheet" href="/static/css/datapicer.css">
+<link rel="stylesheet" href="/static/css/preloader.css">
 
-
-
+<div id="p_prldr"><div class="contpre"><span class="svg_anm"></span><br>Подождите<br><small>загрузка данных</small></div></div>
 
 <div class="container-fluid" style="margin-top:80px">
 
@@ -20,12 +21,13 @@
 		<canvas id="historyChart" height="800"></canvas>
 	</dev>	
 
+
+
 	<dev class = "col-xl-3 boxShadow">
 
 		<dev class ="row p-3">
 			<h3> Настройка диаграммы </h3>
 
-			<form>
 			  <div class="form-row">
 			    <div class="form-group col-md-6">
 			    	<label for="datepicker">Дата</label>
@@ -38,25 +40,14 @@
 
 			    <div class="form-group col-md-6">
 					<label>Интервал</label>
-					<select class="form-control">
+					<select id="t-interval" class="form-control">
 					    <option>Час</option>
 					    <option>День</option>
-					    <option>Неделя</option>
-					    <option>Месяц</option>
-					</select> 
-			  	</div>
-
-			    <div class="form-group col-md-6">
-					<label>Тип диаграммы</label>
-					<select class="form-control">
-					    <option>Линейный</option>
-					    <option>Столбчатый</option>
 					</select> 
 			  	</div>
 
 			  </div>
-			   <button type="submit" class="btn btn-primary">Обновить</button>
-			</form>
+			   <button type="button"  id ="btn-update-now" class="btn btn-primary">Обновить</button>
 		</dev>
 
 	<dev class = "row p-3">
@@ -71,9 +62,7 @@
 			<dev class = "col">
 				<button type="button" id ="btn-day" class="btn btn-primary">За день</button>
 			</dev>
-			<dev class = "col">
-				<button type="button" id ="btn-month" class="btn btn-primary">За месяц</button>
-			</dev>
+
 					
 		</dev>
 	</dev>	
@@ -110,10 +99,12 @@
 		history_chart.options.annotation.annotations[2]['value'] = data['MAX_CURR_CH3']
 
 		history_chart.update();
+		history_chart.resetZoom()
 	}
 
 	function update_last_hour()
 	{
+		show_loader()
 		jQuery.ajax({
             url: "/api/lastdata1min/60/",
             type: "GET",
@@ -121,7 +112,7 @@
             contentType: 'application/json; charset=utf-8',
             success: function(resultData) {
 				update_history_chart(resultData)
-
+				hide_loader()
             },
             error : function(jqXHR, textStatus, errorThrown) {
             	alert( "Плохо" );
@@ -133,6 +124,7 @@
 
 	function update_last_day()
 	{
+		show_loader()
 		jQuery.ajax({
             url: "/api/lastdata_view_1day/",
             type: "GET",
@@ -140,6 +132,7 @@
             contentType: 'application/json; charset=utf-8',
             success: function(resultData) {
 				update_history_chart(resultData)
+				hide_loader()
 
             },
             error : function(jqXHR, textStatus, errorThrown) {
@@ -149,57 +142,133 @@
             timeout: 120000,
         });		
 	}
-
-	function update_last_month()
-	{
-		jQuery.ajax({
-            url: "/api/lastdata_view_1month/",
-            type: "GET",
-
-            contentType: 'application/json; charset=utf-8',
-            success: function(resultData) {
-				update_history_chart(resultData)
-
-            },
-            error : function(jqXHR, textStatus, errorThrown) {
-            	alert( "Плохо" );
-            },
-
-            timeout: 120000,
-        });		
-	}
-
-
-	
 
 </script>
 
 <script>
 $(function() {
     $("#datepicker").datepicker($.datepicker.regional["ru"]),
-    $("#date").datepicker("setDate",null);;
+    $("#datepicker").datepicker("setDate",new Date());
+    $("#datepicker").datepicker('update');
 });
 
+var def_time  = new Date()
+def_time.setMinutes(0);
+def_time.setSeconds(0);
 $('#timepicker').timepicker({
-    timeFormat: 'h:mm p',
+    timeFormat: 'HH:mm',
     interval: 60,
-    minTime: '10',
-    maxTime: '6:00pm',
-    defaultTime: '11',
-    startTime: '10:00',
+    minTime: '0:00',
+    maxTime: '23:00',
+    defaultTime: def_time,
     dynamic: false,
     dropdown: true,
-    scrollbar: true
+    scrollbar: true,
+    use24hours: true
 });
+
 </script>
 
 
+<script>
+
+function show_loader()
+{
+    var $preloader = $('#p_prldr'),
+        $svg_anm   = $preloader.find('.svg_anm');
+    $svg_anm.fadeIn('fast');
+    $preloader.fadeIn('fast');	
+}
+
+function hide_loader()
+{
+    var $preloader = $('#p_prldr'),
+        $svg_anm   = $preloader.find('.svg_anm');
+    $svg_anm.fadeOut('fast');
+    $preloader.fadeOut('fast');	
+}
+
+
+function update_from_time_hour(t_date)
+{
+	show_loader()
+	jQuery.ajax({
+    	url: "/api/aver1minfrom/60/"+t_date,
+        type: "GET",
+
+        contentType: 'application/json; charset=utf-8',
+        success: function(resultData) {
+			update_history_chart(resultData)
+			hide_loader()
+
+        },
+        error : function(jqXHR, textStatus, errorThrown) {
+           	alert( "Плохо" );
+        },
+        timeout: 120000,
+    });		
+}
+
+function update_from_time_day(t_date)
+{
+	show_loader()
+	jQuery.ajax({
+    	url: "/api/aver1dayfrom/"+t_date,
+        type: "GET",
+
+        contentType: 'application/json; charset=utf-8',
+        success: function(resultData) {
+			update_history_chart(resultData)
+			hide_loader()
+        },
+        error : function(jqXHR, textStatus, errorThrown) {
+           	alert( "Плохо" );
+        },
+        timeout: 120000,
+    });		
+}
+
+function update_from_form()
+	{
+		var form_data = $("#datepicker").val()
+		var form_time = $("#timepicker").val()
+		var form_inter = $("#t-interval").val()
+		
+
+		data_valid = moment(form_data, "D.M.YYYY", true).isValid(); // true
+		time_valid = moment(form_time, "H:m", true).isValid(); // true
+
+		user_time = form_data + " " + form_time
+		console.log(user_time)
+		if (!data_valid)
+			alert("Введите корректную дату")
+		if (!time_valid)
+			alert("Введите корректное время")
+
+		if (form_inter == 'Час')
+			update_from_time_hour(user_time)
+		if (form_inter == 'День')
+			update_from_time_day(user_time)
+		
+
+	}
+</script>
 
 
 <script>
 	document.getElementById("btn-hour").onclick=update_last_hour
 	document.getElementById("btn-day").onclick=update_last_day
-	document.getElementById("btn-month").onclick=update_last_month
-
-	
+	document.getElementById("btn-update-now").onclick=update_from_form
 </script>
+
+<script>
+	window.onload = update_last_hour()
+</script>
+
+
+<script type="text/javascript">$(window).on('load', function () {
+    var $preloader = $('#p_prldr'),
+        $svg_anm   = $preloader.find('.svg_anm');
+    $svg_anm.fadeOut();
+    $preloader.delay(500).fadeOut('slow');
+});</script>

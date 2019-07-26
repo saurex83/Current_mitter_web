@@ -23,31 +23,25 @@ table.dataTable tbody tr {
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Важный</td>
-            <td>10/11/2019 15:32:18</td>
-            <td>Канал 1</td>
-            <td>Превышение максимального порога 80А</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Важный</td>
-            <td>10/11/2019 15:32:18</td>
-            <td>Канал 3</td>
-            <td>Превышение максимального порога 10А</td>
-        </tr>
+
     </tbody>
 </table>
 </div>
 
 
+
+
 <script>
-	$(document).ready( function () {
-    $('#myTable').DataTable({
-    	"paging":   false,
-    	"info" : false,
-    	"searching":false
-    });
-} );
+table_config = {
+        "paging":   false,
+        "info" : false,
+        "searching":false
+    }
+
+var t = $('#myTable').DataTable(table_config);
+
+t.row.add([
+    '', '' , '', '' ,''
+    ]).draw( false );
+
 </script>

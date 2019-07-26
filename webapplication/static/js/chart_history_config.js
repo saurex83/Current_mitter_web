@@ -6,11 +6,11 @@ function get_history_chart_config(labels, data, data_pic, graph_name)
 
         data: 
         {
-            labels: ['a','b','c'],
+            labels: [],
             datasets: 
             [{  label : 'Первый',
-                data: [1,2,30],
-                pointRadius : 0,
+                data: [],
+                pointRadius : 1,
                 borderColor: "lime",
                 borderWidth : 2,
                 steppedLine :false,
@@ -18,8 +18,8 @@ function get_history_chart_config(labels, data, data_pic, graph_name)
             },
             { 
                 label : 'Второй',
-                data: [50,20,30],
-                pointRadius : 0,
+                data: [],
+                pointRadius : 1,
                 borderColor: "Aqua",
                 borderWidth : 2,
                 steppedLine :false,
@@ -29,8 +29,8 @@ function get_history_chart_config(labels, data, data_pic, graph_name)
             },
             { 
                 label : 'Третий',
-                data: [70,90,80],
-                pointRadius : 0,
+                data: [],
+                pointRadius : 2,
                 borderColor: "yellow",
                 borderWidth : 2,
                 steppedLine :false,
@@ -41,8 +41,8 @@ function get_history_chart_config(labels, data, data_pic, graph_name)
 
             { 
                 label : 'четвертый',
-                data: [70,90,80],
-                pointRadius : 0,
+                data: [],
+                pointRadius : 1,
                 borderColor: "lime",
                 borderDash: [1,3],
                 borderWidth : 1,
@@ -54,8 +54,8 @@ function get_history_chart_config(labels, data, data_pic, graph_name)
 
             { 
                 label : 'пятый',
-                data: [70,90,80],
-                pointRadius : 0,
+                data: [],
+                pointRadius : 1,
                 borderColor: "Aqua",
                 borderDash: [1,3],
                 borderWidth : 1,
@@ -66,8 +66,8 @@ function get_history_chart_config(labels, data, data_pic, graph_name)
             },
             { 
                 label : 'шестой',
-                data: [70,90,80],
-                pointRadius : 0,
+                data: [],
+                pointRadius : 1,
                 borderColor: "yellow",
                 borderDash: [1,3],
                 borderWidth : 1,
@@ -97,21 +97,21 @@ function get_history_chart_config(labels, data, data_pic, graph_name)
             animation: {duration: 0},
             hover: {animationDuration: 0},
             responsiveAnimationDuration: 0,
-               
+
             pan: 
             {
                 enabled: true,
                 mode: 'xy',
-                rangeMin: { y: 0},
-                rangeMax: {y: 100},
+                rangeMin: {x: null, y: 0},
+                rangeMax: {x: null, y: 100},
             },
 
             zoom: {
                 enabled: true,
                 drag: false,
                 mode: 'y',
-                rangeMin: { y: 0},
-                rangeMax: { y: 100},
+                rangeMin: {x: null, y: 0},
+                rangeMax: {x: null, y: 100},
             },
 
             scales: 
