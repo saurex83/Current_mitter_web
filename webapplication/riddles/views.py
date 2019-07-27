@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 import datetime
 import calendar
-from .models import Curdata,Cnf
+from .models import Curdata,Cnf,Journal
 
 PARAMS_DEFAULT = {"MAX_CURR_CH1" : "50", "MAX_CURR_CH2" : "50",
 					"MAX_CURR_CH3" : "50", "MAX_TIME_CH1" : "3",
@@ -83,6 +83,50 @@ def update_params():
 		PARAMS[item['name']] = item['value']
 
 	return(PARAMS)
+
+def get_alarm(request):
+	# Уровни журнала
+	J_INFO = 0
+	J_WARNING = 1
+	J_ALARM = 2
+	ALARM_TIME = 5
+
+	journal_data = Journal.objects.latest("id")
+	#journal_data = list(journal_data.values("id", "time", "errlevel", "errleveltext", "source", "message"))
+
+	if (journal_data.errlevel != J_ALARM):
+		return JsonResponse({'isAlarm' : False})
+
+	time = datetime.datetime.now()
+	rec_time = journal_data.time
+	time_delta = (time-rec_time).seconds
+
+	if (time_delta > ALARM_TIME):
+		return JsonResponse({'isAlarm' : False})
+
+	res = dict()
+	res['isAlarm'] = True
+	res['src'] =  journal_data.source
+	res['time'] =  journal_data.time.strftime("%d/%m/%y %H:%M:%S")
+	res['msg'] =  journal_data.message
+
+	return JsonResponse(res)
+
+def get_journal(request):
+	journal_data = Journal.objects.all()
+	journal_data = list(journal_data.values("id", "time", "errlevel", "errleveltext", "source", "message"))
+
+	res = []
+	for item in journal_data:
+		row = list()
+		row.append(item['id'])
+		row.append(item['errleveltext'])
+		row.append(item['time'].strftime("%d/%m/%y %H:%M:%S"))
+		row.append(item['source'])
+		row.append(item['message'])
+		res.append(row)
+
+	return JsonResponse({'data':res})
 
 
 def lastdata_view_1month(request):

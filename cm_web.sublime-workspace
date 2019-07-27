@@ -4,16 +4,32 @@
 		"selected_items":
 		[
 			[
+				"time",
+				"timedelta"
+			],
+			[
+				"e",
+				"errlevel"
+			],
+			[
+				"go",
+				"get_journal"
+			],
+			[
+				"re",
+				"resultData"
+			],
+			[
+				"jou",
+				"journal_data"
+			],
+			[
 				"for",
 				"form_data"
 			],
 			[
 				"day",
 				"days"
-			],
-			[
-				"re",
-				"res"
 			],
 			[
 				"val",
@@ -280,10 +296,6 @@
 				"OPT"
 			],
 			[
-				"e",
-				"ev"
-			],
-			[
 				"k_",
 				"k_event"
 			],
@@ -399,17 +411,52 @@
 			"file": "webapplication/templates/base.html",
 			"settings":
 			{
-				"buffer_size": 2795,
+				"buffer_size": 4151,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "webapplication/templates/journal_view.html",
+			"file": "webapplication/static/css/cmeter.css",
 			"settings":
 			{
-				"buffer_size": 985,
+				"buffer_size": 4166,
 				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "webapplication/templates/phase_view.html",
+			"settings":
+			{
+				"buffer_size": 5664,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "webapplication/static/css/datetable.css",
+			"settings":
+			{
+				"buffer_size": 16799,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "webapplication/riddles/views.py",
+			"settings":
+			{
+				"buffer_size": 16592,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "webapplication/riddles/models.py",
+			"settings":
+			{
+				"buffer_size": 5058,
 				"line_ending": "Unix"
 			}
 		},
@@ -417,7 +464,7 @@
 			"file": "webapplication/riddles/urls.py",
 			"settings":
 			{
-				"buffer_size": 1290,
+				"buffer_size": 1434,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -559,15 +606,16 @@
 	[
 		"/home/saurex/Projects/cm_web",
 		"/home/saurex/Projects/cm_web/webapplication",
+		"/home/saurex/Projects/cm_web/webapplication/riddles",
 		"/home/saurex/Projects/cm_web/webapplication/static",
-		"/home/saurex/Projects/cm_web/webapplication/static/charts",
 		"/home/saurex/Projects/cm_web/webapplication/static/css",
-		"/home/saurex/Projects/cm_web/webapplication/static/img",
-		"/home/saurex/Projects/cm_web/webapplication/templates",
 		"/home/saurex/Projects/cm_web/webapplication/webapplication"
 	],
 	"file_history":
 	[
+		"/home/saurex/Projects/cm_web/webapplication/static/objects.txt",
+		"/home/saurex/Projects/cm_web/webapplication/templates/journal_view.html",
+		"/home/saurex/Projects/cm_web/webapplication/static/css/datetable.css",
 		"/home/saurex/Projects/cm_web/webapplication/riddles/models.py",
 		"/home/saurex/Projects/cm_web/webapplication/webapplication/settings.py",
 		"/home/saurex/Projects/cm_web/webapplication/riddles/views.py",
@@ -692,10 +740,7 @@
 		"/home/saurex/Документы/Neos/inc/hal/hal_configuration.h",
 		"/home/saurex/Документы/Neos/src/hal/makefile",
 		"/home/saurex/Документы/Neos/src/kernel/core_systick.c",
-		"/home/saurex/Документы/Neos/src/kernel/core_system.c",
-		"/home/saurex/Документы/Neos/inc/hal/hal.c",
-		"/home/saurex/Документы/Neos/src/kernel/core_idle.c",
-		"/home/saurex/Документы/Neos/src/kernel/core_modules.c"
+		"/home/saurex/Документы/Neos/src/kernel/core_system.c"
 	],
 	"find":
 	{
@@ -713,6 +758,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"select",
+			"input",
+			".dataTables_length",
+			".dataTables_length ",
 			"timepicker.min.css",
 			"timepicker",
 			"zoom",
@@ -778,7 +827,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -787,25 +836,28 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2795,
+						"buffer_size": 4151,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								655,
-								655
+								2391,
+								2391
 							]
 						],
 						"settings":
 						{
+							"SL.33.region_keys":
+							[
+							],
 							"syntax": "Packages/HTML/HTML.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 51.0,
+						"translation.y": 990.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -813,52 +865,175 @@
 				},
 				{
 					"buffer": 1,
-					"file": "webapplication/templates/journal_view.html",
+					"file": "webapplication/static/css/cmeter.css",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 985,
+						"buffer_size": 4166,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								951,
-								951
+								819,
+								819
 							]
 						],
 						"settings":
 						{
-							"SL.54.region_keys":
-							[
-							],
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"syntax": "Packages/CSS/CSS.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 204.0,
+						"translation.y": 450.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "webapplication/templates/phase_view.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5664,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2057,
+								2057
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 447.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "webapplication/static/css/datetable.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16799,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1562,
+								1562
+							]
+						],
+						"settings":
+						{
+							"SL.43.region_keys":
+							[
+							],
+							"syntax": "Packages/CSS/CSS.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 115.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "webapplication/riddles/views.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16592,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3042,
+								3042
+							]
+						],
+						"settings":
+						{
+							"SL.38.region_keys":
+							[
+							],
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1215.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "webapplication/riddles/models.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5058,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1410,
+								1410
+							]
+						],
+						"settings":
+						{
+							"SL.39.region_keys":
+							[
+							],
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 102.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 6,
 					"file": "webapplication/riddles/urls.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1290,
+						"buffer_size": 1434,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1214,
-								1214
+								1383,
+								1383
 							]
 						],
 						"settings":
@@ -877,7 +1052,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 5,
 					"type": "text"
 				}
 			]
@@ -885,7 +1060,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 26.0
+		"height": 24.0
 	},
 	"input":
 	{
@@ -934,7 +1109,7 @@
 	"project": "cm_web.sublime-project",
 	"replace":
 	{
-		"height": 48.0
+		"height": 44.0
 	},
 	"save_all_on_build": true,
 	"select_file":

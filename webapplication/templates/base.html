@@ -62,15 +62,67 @@
 	{% block page %}
 	{% endblock %}
 
-   <a href="#x" class="overlay" id="win1"></a>
+   <a href="#x" class="overlay" id="alarm1"></a>
    <div class="popup text-red">
     <h1>Авария</h1>
-    <p> Ток фаза 1 превысил 5А!</p>
-    <p> Ток фаза 2 превысил 1А!</p>
-    <p> Ток фаза 3 превысил 5А!</p>
+
+    <table>
+    <body>
+      <tr>
+        <td> <p>Время: </p> </td>
+        <td> <p  class="text-right" id="alarm-time"></p> </td>
+      </tr>
+     <tr>
+        <td> <p>Имя канала: </p> </td>
+        <td> <p  class="text-right" id="alarm-src"></p> </td>
+      </tr>
+     <tr>
+        <td> <p>Сообщение: </p> </td>
+        <td> <p class="text-right" id="alarm-msg"></p> </td>
+      </tr>
+
+    </body>
+    </table>
+
     <a class="close" title="Закрыть" href="#close"></a>
     </div>
 
+
+<script>
+    function load_alarm()
+    {
+        jQuery.ajax({
+            url: "/api/get_alarm/",
+            type: "GET",
+
+            contentType: 'application/json; charset=utf-8',
+            success: function(resultData) {
+                console.log(resultData)
+                if (resultData['isAlarm'] == true )
+                {
+                  var at=document.getElementById("alarm-time")
+                  var as=document.getElementById("alarm-src")
+                  var am=document.getElementById("alarm-msg")
+
+                  at.innerHTML =resultData['time']
+                  as.innerHTML =resultData['src']
+                  am.innerHTML =resultData['msg']
+                  window.location.hash="alarm1";
+                }
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                alert( "Плохо" );
+            },
+
+            timeout: 120000,
+        });     
+    }
+
+  // начать повторы с интервалом 2 сек
+  var timerAlarm = setInterval(function() {
+    load_alarm()
+}, 5000);
+</script>
 <!-- Footer 
 
  <div class="d-flex">

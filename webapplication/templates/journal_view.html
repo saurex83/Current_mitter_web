@@ -1,18 +1,31 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="/static/css/datetable.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
 <style>
 table.dataTable tbody tr {
-  background-color: red;
+  background-color: gray;
 }
+
+.green-row {
+  background-color: green !important;
+}
+
+.red-row {
+  background-color: red !important;
+}
+
+
 </style>
+
+
+
 
 
 <div class="container-fluid" style="margin-top:100px">
 
-<table id="myTable" class="table compact table-dark">
+<table id="JTable" class="table compact table-dark">
     <thead>
         <tr >
             <th>№</th>
@@ -22,26 +35,79 @@ table.dataTable tbody tr {
             <th style="width: 50%">Событие</th>
         </tr>
     </thead>
-    <tbody>
-
-    </tbody>
 </table>
-</div>
 
+<script>
 
+var journal_data = {"data":[]}
+journal_data = [["1","Авария", "21/23/45 10:32:12", "Канал 1" ,"Ежика током ударило"]]
+
+table_config = {
+      //  "paging":   false,
+      //  "info" : false,
+        "searching":false,
+    data : journal_data,
+        columnDefs: [
+        { "width": "5%", "targets": [0] },
+        { "width": "10%", "targets": [1,2] },
+        { "width": "15%", "targets": [3] },
+
+      ],
+    "columns": [
+
+            { title: "№" },
+            { title: "Уровень" },
+            { title: "Время" },
+            { title: "Источник" },
+            { title: "Событие", width: "50%" }
+    ],
+
+ "createdRow": function( row, data, dataIndex){
+                if( data[1] ==  'Информация'){
+                    $(row).addClass('green-row');
+                }
+                if( data[1] ==  'Тревога'){
+                    $(row).addClass('red-row');
+                }
+            }
+    }
+
+var t = $('#JTable').DataTable(table_config);
+
+</script>
 
 
 <script>
-table_config = {
-        "paging":   false,
-        "info" : false,
-        "searching":false
+    function load_journal()
+    {
+        jQuery.ajax({
+            url: "/api/get_journal/",
+            type: "GET",
+
+            contentType: 'application/json; charset=utf-8',
+            success: function(resultData) {
+                console.log(resultData)
+                journal_data = resultData['data']
+               $('#JTable').dataTable().fnClearTable();
+               $('#JTable').dataTable().fnAddData(journal_data);
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                alert( "Плохо" );
+            },
+
+            timeout: 120000,
+        });     
     }
+</script>
 
-var t = $('#myTable').DataTable(table_config);
+<script>
+    window.onload = load_journal()
+</script>
 
-t.row.add([
-    '', '' , '', '' ,''
-    ]).draw( false );
 
+<script>
+    // начать повторы с интервалом 2 сек
+    var timerId = setInterval(function() {
+    load_journal()
+}, 2000);
 </script>
