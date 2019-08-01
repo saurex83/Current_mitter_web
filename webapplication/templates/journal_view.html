@@ -1,7 +1,7 @@
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="/static/js/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/css/datetable.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="/static/js/jquery.dataTables.js"></script>
 
 <style>
 table.dataTable tbody tr {
@@ -16,36 +16,71 @@ table.dataTable tbody tr {
   background-color: red !important;
 }
 
-
 </style>
 
+<div class="container-fluid">
+
+<dev class="row">
+<!-- Навигационное меню -->
+    <dev class="col-xl-2">
+        <ul class="nav flex-column nav-pills" id="left-nav-panel" role="tablist" aria-orientation="vertical">
+
+            <li class="nav-item">
+                <a class="nav-link active"  data-toggle="pill" href="#tabPanel-journal" role="tab" aria-selected="true">Журнал</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#tabPanel-journal-history" role="tab" aria-selected="false">История журнала</a>
+            </li>
+        </ul>
+    </dev>
 
 
+<dev class="col-xl-10">
+        <div class="tab-content" id="left-nav-panel-tabContent">
+<div class="tab-pane fade show active" id="tabPanel-journal" role="tabpanel"> 
+    <table id="JTable" class="table compact table-dark">
+        <thead>
+            <tr >
+                <th>№</th>
+                <th>Уровень</th>
+                <th>Время</th>
+                <th>Источник</th>
+                <th style="width: 50%">Событие</th>
+            </tr>
+        </thead>
+    </table>
+</div>
 
+<div class="tab-pane fade  active" id="tabPanel-journal-history" role="tabpanel"> 
+    <table id="JTable-history" class="table compact table-dark">
+        <thead>
+            <tr >
+                <th>№</th>
+                <th>Уровень</th>
+                <th>Время</th>
+                <th>Источник</th>
+                <th style="width: 50%">Событие</th>
+            </tr>
+        </thead>
+    </table>
+     <button type="button" id ="btn-update" class="btn btn-primary mb-2">Обновить</button>
+</div>
 
-<div class="container-fluid" style="margin-top:100px">
-
-<table id="JTable" class="table compact table-dark">
-    <thead>
-        <tr >
-            <th>№</th>
-            <th>Уровень</th>
-            <th>Время</th>
-            <th>Источник</th>
-            <th style="width: 50%">Событие</th>
-        </tr>
-    </thead>
-</table>
+</div>
+</dev>
+</dev>
 
 <script>
 
 var journal_data = {"data":[]}
-journal_data = [["1","Авария", "21/23/45 10:32:12", "Канал 1" ,"Ежика током ударило"]]
+journal_data = [["","", "", "" ,""]]
 
 table_config = {
       //  "paging":   false,
       //  "info" : false,
-        "searching":false,
+      //  "searching":false,
+        "order": [[ 0, "desc" ]],
     data : journal_data,
         columnDefs: [
         { "width": "5%", "targets": [0] },
@@ -72,7 +107,39 @@ table_config = {
             }
     }
 
-var t = $('#JTable').DataTable(table_config);
+table_now_config = {
+        "paging":   false,
+        "info" : false,
+        "searching":false,
+        "order": [[ 0, "desc" ]],
+    data : journal_data,
+        columnDefs: [
+        { "width": "5%", "targets": [0] },
+        { "width": "10%", "targets": [1,2] },
+        { "width": "15%", "targets": [3] },
+
+      ],
+    "columns": [
+
+            { title: "№" },
+            { title: "Уровень" },
+            { title: "Время" },
+            { title: "Источник" },
+            { title: "Событие", width: "50%" }
+    ],
+
+ "createdRow": function( row, data, dataIndex){
+                if( data[1] ==  'Информация'){
+                    $(row).addClass('green-row');
+                }
+                if( data[1] ==  'Тревога'){
+                    $(row).addClass('red-row');
+                }
+            }
+}
+
+var t = $('#JTable-history').DataTable(table_config);
+var t = $('#JTable').DataTable(table_now_config);
 
 </script>
 
@@ -86,28 +153,55 @@ var t = $('#JTable').DataTable(table_config);
 
             contentType: 'application/json; charset=utf-8',
             success: function(resultData) {
-                console.log(resultData)
                 journal_data = resultData['data']
-               $('#JTable').dataTable().fnClearTable();
-               $('#JTable').dataTable().fnAddData(journal_data);
-            },
-            error : function(jqXHR, textStatus, errorThrown) {
-                alert( "Плохо" );
-            },
+                if (Object.keys(journal_data).length != 0)
+                {
+                    $('#JTable-history').dataTable().fnClearTable();
+                    $('#JTable-history').dataTable().fnAddData(journal_data);      
+                }
 
+
+            },
             timeout: 120000,
         });     
     }
+
+    function load_now_journal()
+    {
+        jQuery.ajax({
+            url: "/api/get_journal/25",
+            type: "GET",
+
+            contentType: 'application/json; charset=utf-8',
+            success: function(resultData) {
+                journal_data = resultData['data']
+                if (Object.keys(journal_data).length != 0)
+                {
+                    $('#JTable').dataTable().fnClearTable();
+                    $('#JTable').dataTable().fnAddData(journal_data);    
+                }
+
+
+            },
+            timeout: 120000,
+        });     
+    }  
 </script>
 
 <script>
-    window.onload = load_journal()
+    document.getElementById("btn-update").onclick=load_journal
+    window.onload = load_now_journal()
+     window.onload = load_journal()
 </script>
 
 
 <script>
     // начать повторы с интервалом 2 сек
     var timerId = setInterval(function() {
-    load_journal()
+    load_now_journal()
 }, 2000);
+</script>
+
+<script>
+    document.getElementById("nav_journal").classList.add("active")
 </script>

@@ -1,12 +1,13 @@
 
 
 
-<div class="container-fluid" style="margin-top:80px">
+<div class="container-fluid">
 
 <script src="/static/js/jquery.ui.datepicker-ru.js"></script>
 <link rel="stylesheet" href="/static/css/jquery-ui.css">
 <script src="/static/js/jquery-ui.js"></script>
-
+<script src="/static/js/moment.js"></script>
+<link rel="stylesheet" href="/static/css/datapicer.css">
 <dev class="row">
 
 <!-- Навигационное меню -->
@@ -14,7 +15,7 @@
         <ul class="nav flex-column nav-pills" id="left-nav-panel" role="tablist" aria-orientation="vertical">
 
             <li class="nav-item">
-                <a class="nav-link active"  data-toggle="pill" href="#tabPanel-names" role="tab" aria-selected="true">Имена обьектов</a>
+                <a class="nav-link active"  data-toggle="pill" href="#tabPanel-names" role="tab" aria-selected="true">Названия обьектов</a>
             </li>
 
             <li class="nav-item">
@@ -29,6 +30,10 @@
                 <a class="nav-link" data-toggle="pill" href="#tabPanel-time" role="tab" aria-selected="false">Время</a> 
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#tabPanel-dbclean" role="tab" aria-selected="false">Очистка базы</a> 
+            </li>
+
         </ul>
     </dev>
 
@@ -39,27 +44,27 @@
 <!-- Вкладка настроек названий обьектов-->
             <div class="tab-pane fade show active" id="tabPanel-names" role="tabpanel"> 
                 <form id="form-names">
-                    <h3>Именование обьектов</h3>
+                    <h3>Названия обьектов</h3>
                     <div class="form-group">
                         <label for="channel1-Name">Название канала 1</label>
-                        <input type="text" class="form-control" id="channel1-Name" placeholder="Фаза 1">
+                        <input type="text"  maxlength="32" class="form-control" id="channel1-Name" placeholder="Фаза 1">
                     </div>
 
                     <div class="form-group">
                         <label for="channel2-Name">Название канала 2</label>
-                        <input type="text" class="form-control" id="channel2-Name" placeholder="Фаза 2">
+                        <input type="text" maxlength="32" class="form-control" id="channel2-Name" placeholder="Фаза 2">
                     </div>
 
                     <div class="form-group">
                         <label for="channel3-Name">Название канала 3</label>
-                        <input type="text" class="form-control" id="channel3-Name" placeholder="Фаза 3">
+                        <input type="text" maxlength="32" class="form-control" id="channel3-Name" placeholder="Фаза 3">
                     </div>
 
                    <div class="form-group">
                         <label for="object-Name">Название обьекта</label>
-                        <input type="text" class="form-control" id="object-Name" placeholder="Белый дом">
+                        <input type="text" maxlength="64" class="form-control" id="object-Name" placeholder="Белый дом">
                     </div>
-                    <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
+                    <button type="button" id ="btn-save-names" class="btn btn-primary mb-2">Сохранить</button>
                 </form>
             </div>
         
@@ -73,7 +78,7 @@
                         <div class="form-row">
                                 <div class="col-auto">
                                     <label for="channel1-max-cur">Максимальный ток,А.</label>
-                                    <input type="number" min="1" max="1000" class="form-control" id="channel1-max-cur" value="30">
+                                    <input type="number" step="0.1" min="1" max="1000" class="form-control" id="channel1-max-cur" value="30">
                                 </div>
 
                                 <div class="col-auto">
@@ -87,13 +92,13 @@
                         <h5>Канал 2</h5>
                         <div class="form-row">
                                 <div class="col-auto">
-                                    <label for="channel1-max-cur">Максимальный ток,А.</label>
-                                    <input type="number" min="1" max="1000" class="form-control" id="channel1-max-cur" value="30">
+                                    <label for="channel2-max-cur">Максимальный ток,А.</label>
+                                    <input type="number" step="0.1" min="1" max="1000" class="form-control" id="channel2-max-cur" value="30">
                                 </div>
 
                                 <div class="col-auto">
-                                    <label for="channel1-time-cur">Допустимое время,сек.</label>
-                                    <input type="number"  min="1" max="120" class="form-control" id="channel1-time-cur" value="10">
+                                    <label for="channel2-time-cur">Допустимое время,сек.</label>
+                                    <input type="number"  min="1" max="120" class="form-control" id="channel2-time-cur" value="10">
                                 </div>
                         </div>
                     </div>
@@ -102,18 +107,17 @@
                         <h5>Канал 3</h5>
                         <div class="form-row">
                                 <div class="col-auto">
-                                    <label for="channel1-max-cur">Максимальный ток,А.</label>
-                                    <input type="number" min="1" max="1000" class="form-control" id="channel1-max-cur" value="30">
+                                    <label for="channel3-max-cur">Максимальный ток,А.</label>
+                                    <input type="number" step="0.1" min="1" max="1000" class="form-control" id="channel3-max-cur" value="30">
                                 </div>
 
                                 <div class="col-auto">
-                                    <label for="channel1-time-cur">Допустимое время,сек.</label>
-                                    <input type="number"  min="1" max="120" class="form-control" id="channel1-time-cur" value="10">
+                                    <label for="channel3-time-cur">Допустимое время,сек.</label>
+                                    <input type="number"  min="1" max="120" class="form-control" id="channel3-time-cur" value="10">
                                 </div>
                         </div>
                     </div>
-                    <p class="text-primary">*Для вступления настроек в силу, необходимо перезапустить службу сбора данных</p>
-                    <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
+                    <button type="button" id ="btn-save-values" class="btn btn-primary mb-2">Сохранить</button>
                 </form>
             </div>
 
@@ -141,7 +145,7 @@
                         <input type="text" class="form-control" required pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" id="object-Name" placeholder="255.255.255.0">
                     </div>
                     <p class="text-primary">*Для вступления настроек в силу, необходимо перезапустить прибор</p>
-                    <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
+                    <button type="button" id ="btn-save-network" class="btn btn-primary mb-2">Сохранить</button>
                 </form>
             </div>
 
@@ -156,20 +160,31 @@
 
                     <div class="form-group">
                         <label for="channel2-Name">Часы</label>
-                        <input type="number" min="0" max="23" class="form-control" id="channel1-max-cur" value="10">
+                        <input type="number" min="0" max="23" class="form-control" id="user_hour" value="10">
                     </div>
 
                     <div class="form-group">
                         <label for="channel3-Name">Минуты</label>
-                        <input type="number" min="0" max="59" class="form-control" id="channel1-max-cur" value="0"> 
+                        <input type="number" min="0" max="59" class="form-control" id="user_min" value="0"> 
                     </div>
 
                    <div class="form-group">
                         <label for="object-Name">Секунды</label>
-                        <input type="number" min="0" max="59" class="form-control" id="channel1-max-cur" value="0"> 
+                        <input type="number" min="0" max="59" class="form-control" id="user_sec" value="0"> 
                     </div>
-                    <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
+                    <button type="button" id ="btn-save-time" class="btn btn-primary mb-2">Сохранить</button>
                 </form>
+            </div>
+<!-- Очистка базы-->
+            <div class="tab-pane fade" id="tabPanel-dbclean" role="tabpanel" >
+                    <h3>Очистка базы</h3>
+
+                    <div class="form-group">
+                        <label for="channel2-Name">Код сброса</label>
+                        <input type="password" class="form-control" id="dbclean_password">
+                    </div>
+                    <button type="button" id ="btn-cleandb" class="btn btn-primary mb-2">Очистить</button>
+
             </div>
 
         </div>
@@ -189,6 +204,157 @@
 
 $(function() {
     $("#datepicker").datepicker($.datepicker.regional["ru"]),
-    $("#date").datepicker("setDate",null);;
+    $("#datepicker").datepicker("setDate",new Date());
 });
+</script>
+
+
+
+<script>
+    function save_network()
+    {
+        alert("Сохранение сетевых настроек не доступно");
+    }
+
+    function save_names_values()
+    {
+        data = produce_json()
+        data = JSON.stringify(data)
+        jQuery.ajax({
+                    url: "/api/set_names/"+data,
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(resultData) {
+                        if (resultData['result'] == true)
+                            alert( "Данные успешно сохранены");
+                        else
+                            alert( "Ошибка " + resultData['msg']);
+                    },
+                    timeout: 120000,
+                }); 
+    }    
+
+    function read_value(id, text)
+    {
+        return(document.getElementById(id).value)   
+    }
+
+    function produce_json()
+    {
+        var pull_data = {}
+        pull_data['NAME_CH1'] = read_value("channel1-Name")
+        pull_data['NAME_CH2'] = read_value("channel2-Name")
+        pull_data['NAME_CH3'] = read_value("channel3-Name")
+        pull_data['NAME_OBJ'] = read_value("object-Name")
+
+        pull_data['MAX_CURR_CH1'] = read_value("channel1-max-cur")
+        pull_data['MAX_CURR_CH2'] = read_value("channel2-max-cur")
+        pull_data['MAX_CURR_CH3'] = read_value("channel3-max-cur")
+
+        pull_data['MAX_TIME_CH1'] = read_value("channel1-time-cur")
+        pull_data['MAX_TIME_CH2'] = read_value("channel2-time-cur")
+        pull_data['MAX_TIME_CH3'] = read_value("channel3-time-cur")
+        return (pull_data)
+    }
+
+
+function save_time()
+{
+    var pull_data={}
+    var form_data = $("#datepicker").val()
+    console.log(form_data)
+
+    pull_data['date'] = form_data
+    pull_data['hour'] = read_value("user_hour")
+    pull_data['min'] = read_value("user_min")
+    pull_data['sec'] = read_value("user_sec")
+
+    pull_data = JSON.stringify(pull_data)
+
+jQuery.ajax({
+            url: "/api/set_time/"+pull_data,
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            success: function(resultData) {
+                if (resultData['result'] == false)
+                    alert(resultData['msg'])
+                else
+                    alert('Время сохранено!')
+            },
+            timeout: 120000,
+        }); 
+
+
+}
+
+</script>
+
+<script>
+    function cleandb(){
+     jQuery.ajax({
+                url: "/api/trunc_tables/"+read_value("dbclean_password"),
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                success: function(resultData) {
+                    console.log(resultData)
+                    if (resultData['result'] == false)
+                        alert("Неверный код.")
+                    else
+                        alert('База данных очищенна.')
+                },
+                timeout: 120000,
+            });        
+        }
+</script>
+
+
+
+<script>
+    document.getElementById("btn-save-names").onclick=save_names_values
+    document.getElementById("btn-save-values").onclick=save_names_values
+    document.getElementById("btn-save-network").onclick=save_network
+    document.getElementById("btn-save-time").onclick=save_time
+    document.getElementById("btn-cleandb").onclick=cleandb
+</script>
+
+
+
+
+<script>
+
+function insert_value(id, text)
+{
+    document.getElementById(id).value = text;   
+}
+
+function update_configure(resultData)
+{
+    insert_value("channel1-Name", resultData['NAME_CH1'])
+    insert_value("channel2-Name", resultData['NAME_CH2'])
+    insert_value("channel3-Name", resultData['NAME_CH3'])
+    insert_value("object-Name", resultData['NAME_OBJ'])
+
+    insert_value("channel1-max-cur", resultData['MAX_CURR_CH1'])
+    insert_value("channel2-max-cur", resultData['MAX_CURR_CH2'])   
+    insert_value("channel3-max-cur", resultData['MAX_CURR_CH3'])
+   
+    insert_value("channel1-time-cur", resultData['MAX_TIME_CH1'])
+    insert_value("channel2-time-cur", resultData['MAX_TIME_CH2'])   
+    insert_value("channel3-time-cur", resultData['MAX_TIME_CH3'])
+}
+
+jQuery.ajax({
+            url: "/api/get_names/",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            success: function(resultData) {
+                update_configure(resultData)
+            },
+            timeout: 120000,
+        }); 
+</script>
+
+
+<script>
+    document.getElementById("nav_config").classList.add("active")
 </script>

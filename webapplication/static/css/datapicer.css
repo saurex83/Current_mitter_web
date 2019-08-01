@@ -4,8 +4,15 @@
     background: blue
 }
 
+.ui-datepicker-week-end{
+    color:#f00 !important;;
+}
+
+.ui-datepicker-week{color:#0f0;}
+
 .ui-datepicker {
     font-size: 1em;
+    font-color : red;
     display: none;
     position: absolute;
     padding: 4px;
@@ -20,3 +27,11 @@
 }
 
 .ui-datepicker-calendar .ui-state-active { background: lightblue; } 
+
+.ui-datepicker-header{
+    color: black;
+}
+
+.ui-widget-content{
+    color: gray;
+}

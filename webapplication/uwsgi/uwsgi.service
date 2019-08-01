@@ -2,7 +2,7 @@
 Description=uWSGI Emperor service
 
 [Service]
-ExecStartPre=/bin/bash -c 'mkdir -p /run/uwsgi; chown saurex83:saurex83 /run/uwsgi'
+ExecStartPre=/bin/bash -c 'mkdir -p /run/uwsgi; chown root:root /run/uwsgi'
 ExecStart=/usr/local/bin/uwsgi --emperor /etc/uwsgi/
 Restart=always
 KillSignal=SIGQUIT

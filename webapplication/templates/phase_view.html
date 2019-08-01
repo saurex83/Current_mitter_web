@@ -1,5 +1,5 @@
 <script src="/static/js/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/static/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="/static/css/datetable.css">
 <script type="text/javascript" charset="utf8" src="/static/js/jquery.dataTables.js"></script>
 <script src="/static/js/chartjs-plugin-annotation.min.js"></script>
 <script src="/static/js/chart_measure_config.js"></script>
@@ -8,9 +8,18 @@
 table.dataTable tbody tr {
   background-color: DarkCyan ;
 }
+
+
+.cyan-row {
+  background-color: DarkCyan !important;
+}
+
+.red-row {
+  background-color: red !important;
+
 </style>
 
-<div class="container-fluid" style="margin-top:80px">
+<div class="container-fluid" >
 
 <dev class="row">
 
@@ -34,6 +43,7 @@ table.dataTable tbody tr {
             <th class="text-center" >Ток</th>
             <th class="text-center" >Макс. ток</th>
             <th class="text-center" >Пик. ток</th>
+            <th class="text-center" >Порог</th>
         </tr>
     </thead>
     <tbody>
@@ -42,19 +52,23 @@ table.dataTable tbody tr {
             <td class="text-center" id = "ch1_avr_now"></td>
             <td class="text-center" id = "ch1_max_val"></td>
             <td class="text-center" id = "ch1_pic_now"></td>
+            <td class="text-center" id = "ch1_porog"></td>
         </tr>
         <tr>
             <th class="text-center" scope="row">2</th>
             <td class="text-center" id = "ch2_avr_now"></td>
             <td class="text-center" id = "ch2_max_val"></td>
             <td class="text-center" id = "ch2_pic_now"></td>
+            <td class="text-center" id = "ch2_porog"></td>
         </tr>
         <tr>
             <th class="text-center" scope="row">3</th>
             <td class="text-center" id = "ch3_avr_now"></td>
             <td class="text-center" id = "ch3_max_val"></td>
             <td class="text-center" id = "ch3_pic_now"></td>
+            <td class="text-center" id = "ch3_porog"></td>
         </tr>
+
     </tbody>
 </table>
 	</dev>	
@@ -159,6 +173,17 @@ function update_table(data){
 	val.innerHTML = data['ch2_pic_now'].toFixed(1) + " A"
 	var val = document.getElementById("ch3_pic_now");
 	val.innerHTML = data['ch3_pic_now'].toFixed(1) + " A"
+
+
+	var val = document.getElementById("ch1_porog");
+	val.innerHTML = data['MAX_CURR_CH1'].toFixed(1) + " A"
+
+	var val = document.getElementById("ch2_porog");
+	val.innerHTML = data['MAX_CURR_CH2'].toFixed(1) + " A"
+
+	var val = document.getElementById("ch3_porog");
+	val.innerHTML = data['MAX_CURR_CH3'].toFixed(1) + " A"
+
 }
 
 function updata_lastvalue(channel, sec)
@@ -172,10 +197,6 @@ jQuery.ajax({
 				update_charts(resultData)
 				update_table(resultData)
             },
-            error : function(jqXHR, textStatus, errorThrown) {
-            	alert( "Плохо" );
-            },
-
             timeout: 120000,
         });	
 }
@@ -190,15 +211,29 @@ jQuery.ajax({
 
 
 <script>
-	$(document).ready( function () {
-    $('#myTable').DataTable({
-    	"paging":   false,
-    	"info" : false,
-    	"searching":false
-    });
-} );
+var journal_data = {"data":[]}
+table_config = {
+        "paging":   false,
+        "info" : false,
+        "searching":false,
+ "createdRow": function( row, data, dataIndex){
+                if( data[1] ==  'Информация'){
+                    $(row).addClass('green-row');
+                }
+                if( data[1] ==  'Тревога'){
+                    $(row).addClass('red-row');
+                }
+            }
+}
+
+var t = $('#myTable').DataTable(table_config);
+
 </script>
 
 <script>
 	window.onload = updata_lastvalue()
+</script>
+
+<script>
+	document.getElementById("nav_present").classList.add("active")
 </script>

@@ -31,6 +31,18 @@ function get_measure_chart_config(labels, data, data_pic, graph_name)
 
         options: 
         {
+
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                    var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                    console.log(tooltipItem.yLabel)
+                    var val_fixed = parseFloat(tooltipItem.yLabel).toFixed(2)
+                    return val_fixed.toString() + ' A';
+                }
+            }
+        },
+
             legend: {
                 display: false
             },

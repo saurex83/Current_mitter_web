@@ -6,14 +6,19 @@ from django.http import JsonResponse
 import datetime
 import calendar
 from .models import Curdata,Cnf,Journal
+import json
+from jsonschema import validate,ValidationError
+import subprocess
+from django.core.exceptions import ObjectDoesNotExist
 
 PARAMS_DEFAULT = {"MAX_CURR_CH1" : "50", "MAX_CURR_CH2" : "50",
 					"MAX_CURR_CH3" : "50", "MAX_TIME_CH1" : "3",
 					"MAX_TIME_CH2" : "3", "MAX_TIME_CH3" : "3",
 					"NAME_CH1" : "Фаза 1",
 					"NAME_CH2" : "Фаза 2", "NAME_CH3" : "Фаза 3",
-					"NAME_OBJ" : "Помещение #1" }
+					"NAME_OBJ" : "Помещение 1" }
 
+CLEAN_PASS = "mittermitter"
 
 def present(request):
 	#template = loader.get_template("index.html")
@@ -59,6 +64,44 @@ def polls_detail(request, pk):
     }}
     return JsonResponse(data)
 
+def set_time(request,json_data):
+	res = {'result' : True}
+
+	# На расбери нужно установить ntp сервер и отключить его.
+	# в противном случаи время устанавливаться не будет
+	try:
+		json_data = json.loads(json_data)
+
+		date = json_data['date']
+		hour = int(json_data['hour'])
+		minute = int(json_data['min'])
+		seconds = int(json_data['sec'])
+
+		time = datetime.datetime.strptime(date,'%d.%m.%Y')
+		time = time.replace(hour = hour, minute = minute, second = seconds)
+	except ValueError:
+		res['result'] = False
+		res['msg'] = 'Данные введены с ошибкой'
+		return JsonResponse(res)
+
+	set_date = time.strftime('%Y%m%d')
+	print(set_date)
+
+	set_time = time.strftime('%H:%M:%S')
+
+	code = subprocess.call("date +%Y%m%d -s " + '"' + set_date + '"',shell=True )
+	if (code ==0):
+		print ("дата изменена")
+
+	code = subprocess.call("date +%T -s " + '"' + set_time + '"' ,shell=True)
+	if (code ==0):
+		print ("Время изменено")
+
+	code = subprocess.call("hwclock -w" ,shell=True)
+
+
+
+	return JsonResponse({'result':True})
 
 # Ищем максимальное значение среднего тока в запрошенных данных
 def find_max_current(data, ch):
@@ -84,6 +127,17 @@ def update_params():
 
 	return(PARAMS)
 
+
+def trunc_tables(request, password):
+	if (password != CLEAN_PASS):
+		return JsonResponse({'result' : False})
+			
+	Cnf.objects.all().delete()
+	Curdata.objects.all().delete()
+	Journal.objects.all().delete()
+	return JsonResponse({'result' : True})
+
+
 def get_alarm(request):
 	# Уровни журнала
 	J_INFO = 0
@@ -91,8 +145,11 @@ def get_alarm(request):
 	J_ALARM = 2
 	ALARM_TIME = 5
 
-	journal_data = Journal.objects.latest("id")
+	try:
+		journal_data = Journal.objects.latest("id")
 	#journal_data = list(journal_data.values("id", "time", "errlevel", "errleveltext", "source", "message"))
+	except ObjectDoesNotExist:
+		return JsonResponse({'isAlarm' : False})
 
 	if (journal_data.errlevel != J_ALARM):
 		return JsonResponse({'isAlarm' : False})
@@ -111,6 +168,118 @@ def get_alarm(request):
 	res['msg'] =  journal_data.message
 
 	return JsonResponse(res)
+
+def get_cfn_names(request):
+	params =  update_params()
+	return JsonResponse(params)
+
+def check_value(text_val, min_val, max_val):
+	try:
+		val = int(text_val)
+	except ValueError:
+		return False
+
+	if (val >= min_val and val<=max_val):
+ 		return True
+
+	return False
+
+def update_db_value(name, val):
+	print (name)
+	db_obj, created = Cnf.objects.get_or_create(name = name,defaults={'name':name, 'value': val})
+	db_obj.value = val
+	db_obj.save()
+
+def write_cfn_names(request,json_data):
+	res = {'result' : True}
+	try:
+		data = json.loads(json_data)
+	except ValueError:
+		res['result'] = False
+		res['msg'] = "Формат не json"
+		return JsonResponse(res)
+
+	schema = {
+	    "type" : "object",
+	    "required" : [
+	    	"MAX_CURR_CH1",
+	    	"MAX_CURR_CH2",
+	    	"MAX_CURR_CH3",
+	    	"MAX_TIME_CH1",
+	    	"MAX_TIME_CH2",
+	    	"MAX_TIME_CH3",
+	    	"NAME_CH1",
+	    	"NAME_CH2",
+	    	"NAME_CH3",
+	    	"NAME_OBJ"  
+	    ],
+	    "properties" : {
+	        "MAX_CURR_CH1" : {"type" : "string"},
+	        "MAX_CURR_CH2" : {"type" : "string"},
+	        "MAX_CURR_CH3" : {"type" : "string"},
+	        "MAX_TIME_CH1" : {"type" : "string"},
+	        "MAX_TIME_CH2" : {"type" : "string"},
+	        "MAX_TIME_CH3" : {"type" : "string"},
+	        "NAME_CH1" : {"type" : "string"},
+	        "NAME_CH2" : {"type" : "string"},
+	        "NAME_CH3" : {"type" : "string"},
+	        "NAME_OBJ" : {"type" : "string"}
+	    },
+	}
+	
+	try:
+		validate(instance=data, schema=schema)
+	except ValidationError as msg:
+		res['result'] = False
+		res['msg'] = str(msg)
+		return JsonResponse(res)
+
+	# так как мы работаем со строками, нужно проверить допустимы значения вручную 
+	flag = True
+	flag = flag and check_value(data['MAX_CURR_CH1'] , 1,1000)
+	flag = flag and check_value(data['MAX_CURR_CH2'] , 1,1000)
+	flag = flag and check_value(data['MAX_CURR_CH3'] , 1,1000)
+
+	flag = flag and check_value(data['MAX_TIME_CH1'] , 1,120)
+	flag = flag and check_value(data['MAX_TIME_CH2'] , 1,120)
+	flag = flag and check_value(data['MAX_TIME_CH3'] , 1,120)
+
+	if (flag == False):
+		res['result'] = False
+		res['msg'] = 'Неверное значение параметра'
+		return JsonResponse(res)
+
+	update_db_value('MAX_CURR_CH1', data['MAX_CURR_CH1'])
+	update_db_value('MAX_CURR_CH2', data['MAX_CURR_CH2'])
+	update_db_value('MAX_CURR_CH3', data['MAX_CURR_CH3'])
+
+	update_db_value('MAX_TIME_CH1', data['MAX_TIME_CH1'])
+	update_db_value('MAX_TIME_CH2', data['MAX_TIME_CH2'])
+	update_db_value('MAX_TIME_CH3', data['MAX_TIME_CH3'])
+
+
+	update_db_value('NAME_CH1', data['NAME_CH1'])
+	update_db_value('NAME_CH2', data['NAME_CH2'])
+	update_db_value('NAME_CH3', data['NAME_CH3'])
+	update_db_value('NAME_OBJ', data['NAME_OBJ'])
+
+	return JsonResponse(res)
+
+def get_journal_n(request,n):
+	journal_data = Journal.objects.order_by('-id')[:n]
+	journal_data = list(journal_data.values("id", "time", "errlevel", "errleveltext", "source", "message"))
+
+	res = []
+	for item in journal_data:
+		row = list()
+		row.append(item['id'])
+		row.append(item['errleveltext'])
+		row.append(item['time'].strftime("%d/%m/%y %H:%M:%S"))
+		row.append(item['source'])
+		row.append(item['message'])
+		res.append(row)
+
+	return JsonResponse({'data':res})
 
 def get_journal(request):
 	journal_data = Journal.objects.all()
@@ -538,7 +707,7 @@ def lastdata_view(request, sec):
 	start_time = end_time - datetime.timedelta(seconds = sec)
 	
 	# Подгружаем данные из временного диапазон
-	data = Curdata.objects.filter(time__range =(start_time,end_time))
+	data = Curdata.objects.filter(time__range =(start_time,end_time)).order_by('time')
 	params = update_params()
 
 
