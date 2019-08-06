@@ -300,7 +300,10 @@ jQuery.ajax({
                     if (resultData['result'] == false)
                         alert("Неверный код.")
                     else
+                    {
                         alert('База данных очищенна.')
+                        document.location.reload(true)
+                    }
                 },
                 timeout: 120000,
             });        

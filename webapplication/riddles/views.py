@@ -116,7 +116,7 @@ def find_max_current(data, ch):
 
 # Загружаем настройки из базы данных, либо устанавливаем по умолчанию
 def update_params():
-	PARAMS = PARAMS_DEFAULT
+	PARAMS = dict(PARAMS_DEFAULT)
 
 	# Загружаем настройки
 	config = Cnf.objects.all()
